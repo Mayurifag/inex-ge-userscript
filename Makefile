@@ -15,7 +15,7 @@ lint:
 format:
 	npx prettier --check .
 
-ci: install lint format build
+ci: lint format build
 
 clean:
 	rm -rf node_modules dist

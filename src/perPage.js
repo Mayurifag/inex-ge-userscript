@@ -4,3 +4,19 @@ export function applyPerPage() {
   url.searchParams.set('perPage', '20');
   window.location.replace(url.toString());
 }
+
+export function fixPerPageOptions() {
+  const selects = document.querySelectorAll('select[name="perPage"]');
+  if (!selects.length) return;
+  const url = new URL(window.location.href);
+  url.searchParams.delete('perPage');
+  url.searchParams.delete('page');
+  const base = url.searchParams.toString();
+  for (const sel of selects) {
+    for (const opt of sel.options) {
+      const n = opt.textContent.trim();
+      const qs = base ? `${base}&perPage=${n}` : `perPage=${n}`;
+      opt.value = `${url.origin}${url.pathname}?${qs}`;
+    }
+  }
+}

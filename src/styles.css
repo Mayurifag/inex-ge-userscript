@@ -11,11 +11,6 @@ html.inex-ge-hide-tracking-date table.table tbody tr > td:first-child p {
   display: none !important;
 }
 
-td.flightNumber.inex-ge-flight-cell {
-  position: relative;
-  overflow: visible;
-}
-
 .inex-ge-status,
 .inex-ge-arrival {
   display: block;

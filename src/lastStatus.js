@@ -52,7 +52,6 @@ function replaceCell(td) {
 
   tip.classList.remove('toolTip');
   tip.classList.add('inex-ge-tip');
-  td.classList.add('inex-ge-flight-cell');
 
   const sText = info.statusText || '—';
   const s = document.createElement('span');
