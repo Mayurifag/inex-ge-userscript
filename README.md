@@ -178,3 +178,14 @@ clean:
 
 - Run features once at `document-end`. Pagination on this site is full-page navigation (URL changes, `@match` re-fires) — no SPA routing observed.
 - For safety against client-side re-renders, attach a single `MutationObserver` on `tbody` that re-runs feature 4 (cell replacement) when new `tr` nodes appear. Hide rules (features 2, 3) are CSS-injected, so they apply automatically without observer.
+
+## Things to work on
+
+0) how to get the browser extension to check the work itself? autoreload src? and so on
+1) Lingvist still doesnt translate reliably. well, it works..
+2) Hover on last status doesnt work
+3) Sorting should put unknown first I guess?
+4) perPage bug - the page one doesnt work correctly with mine. think whats wrong?
+5) Every layout fix (mobile/tablet/...) - Last status too big - mobile fix didnt work at all
+6) CODEREVIEW
+7) dark theme?

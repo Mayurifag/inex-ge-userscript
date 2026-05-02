@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         inex.ge tweaks
 // @namespace    https://github.com/Mayurifag/inex-ge-userscript
-// @version      0.1.0
-// @description  Quality-of-life tweaks for inex.ge parcels page: force perPage=20, hide Recipient column, hide takeout parcels, hide send date in tracking column, replace Flight number cell with two-row last-status info (tooltip preserved), click-to-sort by arrival date.
+// @version      0.2.0
+// @description  Quality-of-life tweaks for inex.ge parcels page: force perPage=20, hide Recipient column, hide takeout parcels, hide send date in tracking column, replace Flight number cell with two-row last-status info (tooltip preserved, Linguist-friendly), click-to-sort by arrival date, mobile layout fixes for description column.
 // @match        https://inex.ge/ka/room/parcels*
 // @match        https://inex.ge/en/room/parcels*
 // @match        https://inex.ge/ru/room/parcels*
@@ -29,6 +29,7 @@
     hideTrackingDate: { key: 'feat.hideTrackingDate', label: 'Hide date in tracking column' },
     lastStatus: { key: 'feat.lastStatus', label: 'Replace Flight number with last status' },
     sortByArrival: { key: 'feat.sortByArrival', label: 'Sort by arrival date on header click' },
+    mobileFix: { key: 'feat.mobileFix', label: 'Mobile layout fixes' },
   };
 
   const HEADER_TEXT = 'Last status';
@@ -36,6 +37,7 @@
   const REPLACED_ATTR = 'data-inex-ge-replaced';
   const SORT_BOUND_ATTR = 'data-inex-ge-sort-bound';
   const ARRIVAL_DATA = 'inexGeArrival';
+  const REFRESH_DEBOUNCE_MS = 150;
   const LOG = '[inex-ge]';
 
   function get(key) {
@@ -72,6 +74,26 @@
     if (get(FEATURES.hideTrackingDate.key)) {
       rules.push('table.table tbody tr > td:first-child p { display: none !important; }');
     }
+    if (get(FEATURES.mobileFix.key)) {
+      rules.push('@media (max-width: 768px) {');
+      rules.push('  table.table tbody td.description {');
+      rules.push('    white-space: nowrap !important;');
+      rules.push('    overflow: hidden !important;');
+      rules.push('    text-overflow: ellipsis !important;');
+      rules.push('    max-width: 40vw !important;');
+      rules.push('  }');
+      rules.push('  table.table tbody td.flightNumber {');
+      rules.push('    max-width: 45vw !important;');
+      rules.push('  }');
+      rules.push('  table.table tbody td.flightNumber .inex-ge-arrival,');
+      rules.push('  table.table tbody td.flightNumber .inex-ge-status {');
+      rules.push('    overflow: hidden !important;');
+      rules.push('    text-overflow: ellipsis !important;');
+      rules.push('    white-space: nowrap !important;');
+      rules.push('    max-width: 100% !important;');
+      rules.push('  }');
+      rules.push('}');
+    }
     el.textContent = rules.join('\n');
   }
 
@@ -101,33 +123,86 @@
     return { arrival, statusText, statusDate };
   }
 
+  const ROW_STYLE =
+    'display:block;font-family:inherit;font-size:12px;line-height:1.3;font-weight:normal;';
+  const ARRIVAL_STYLE = `${ROW_STYLE}color:red;`;
+  const STATUS_STYLE = `${ROW_STYLE}color:green;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;`;
+  const TIP_STYLE_BASE =
+    'position:absolute;left:0;top:100%;z-index:99999;background:#fff;color:#000;border:1px solid #ccc;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.2);font-family:inherit;font-size:12px;line-height:1.4;white-space:normal;min-width:220px;max-width:420px;text-align:left;';
+  const TIP_STYLE_HIDDEN = `${TIP_STYLE_BASE}display:none;`;
+  const TIP_STYLE_SHOWN = `${TIP_STYLE_BASE}display:block;`;
+
+  function refreshSummary(td, aNode, sNode) {
+    const info = extractInfo(td);
+    if (!info) return;
+    const sText = info.statusText || '—';
+    if (sNode.nodeValue !== sText) sNode.nodeValue = sText;
+    if (aNode && info.arrival) {
+      const aText = `Estimated arrival: ${info.arrival}`;
+      if (aNode.nodeValue !== aText) aNode.nodeValue = aText;
+    }
+    const tr = td.closest('tr');
+    if (tr) tr.dataset[ARRIVAL_DATA] = info.arrival;
+  }
+
   function replaceCell(td) {
     if (td.getAttribute(REPLACED_ATTR)) return;
+    const tip = td.querySelector('div.toolTip');
+    if (!tip) return;
     const info = extractInfo(td);
     if (!info) return;
 
-    const tip = td.querySelector('div.toolTip');
-    if (!tip) return;
-
-    while (td.firstChild) td.removeChild(td.firstChild);
-
-    const a = document.createElement('span');
-    a.className = 'inex-ge-arrival';
-    a.textContent = info.arrival ? `Arrival: ${info.arrival}` : 'Arrival: —';
-    td.appendChild(a);
-
-    const s = document.createElement('span');
-    s.className = 'inex-ge-status';
-    s.textContent = info.statusText || '—';
-    td.appendChild(s);
-
     tip.classList.remove('toolTip');
     tip.classList.add('inex-ge-tip');
-    td.appendChild(tip);
+    tip.setAttribute('style', TIP_STYLE_HIDDEN);
 
-    td.setAttribute(REPLACED_ATTR, '1');
+    td.style.position = 'relative';
+    td.style.overflow = 'visible';
+
+    const sText = info.statusText || '—';
+    const s = document.createElement('span');
+    s.className = 'inex-ge-status';
+    s.setAttribute('style', STATUS_STYLE);
+    const sNode = document.createTextNode(sText);
+    s.appendChild(sNode);
+
+    let a = null;
+    let aNode = null;
+    if (info.arrival) {
+      a = document.createElement('span');
+      a.className = 'inex-ge-arrival';
+      a.setAttribute('style', ARRIVAL_STYLE);
+      aNode = document.createTextNode(`Estimated arrival: ${info.arrival}`);
+      a.appendChild(aNode);
+    }
+
+    const children = a ? [s, a, tip] : [s, tip];
+    td.replaceChildren(...children);
+
     const tr = td.closest('tr');
     if (tr) tr.dataset[ARRIVAL_DATA] = info.arrival;
+
+    td.addEventListener('mouseenter', () => {
+      tip.setAttribute('style', TIP_STYLE_SHOWN);
+    });
+    td.addEventListener('mouseleave', () => {
+      tip.setAttribute('style', TIP_STYLE_HIDDEN);
+    });
+
+    let timer = null;
+    const obs = new MutationObserver(() => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        try {
+          refreshSummary(td, aNode, sNode);
+        } catch (e) {
+          console.error(LOG, e);
+        }
+      }, REFRESH_DEBOUNCE_MS);
+    });
+    obs.observe(tip, { characterData: true, subtree: true, childList: true });
+
+    td.setAttribute(REPLACED_ATTR, '1');
   }
 
   function parseDmy(s) {
