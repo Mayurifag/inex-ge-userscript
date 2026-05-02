@@ -1,5 +1,4 @@
 import './styles.css';
-import './dark.css';
 import { FEATURES, get } from './features.js';
 import { applyPerPage, fixPerPageOptions } from './perPage.js';
 import { applyStyles } from './styles.js';
@@ -17,11 +16,18 @@ function refresh() {
   stripDescriptionPrice();
 }
 
-if (get(FEATURES.perPage.key)) {
-  applyPerPage();
-  fixPerPageOptions();
-}
+if (get(FEATURES.perPage.key)) applyPerPage();
 applyStyles();
-refresh();
-startObserver(refresh);
 registerMenu(refresh);
+
+function onReady() {
+  if (get(FEATURES.perPage.key)) fixPerPageOptions();
+  refresh();
+  startObserver(refresh);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', onReady, { once: true });
+} else {
+  onReady();
+}

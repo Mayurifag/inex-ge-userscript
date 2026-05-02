@@ -11,5 +11,4 @@ export const FEATURE_CLASS = {
   hideRecipient: 'inex-ge-hide-recipient',
   hideTakeout: 'inex-ge-hide-takeout',
   removeClutter: 'inex-ge-remove-clutter',
-  darkTheme: 'inex-ge-dark',
 };

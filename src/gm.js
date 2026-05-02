@@ -3,6 +3,7 @@ import {
   GM_setValue as imp_setValue,
   GM_registerMenuCommand as imp_registerMenuCommand,
   GM_unregisterMenuCommand as imp_unregisterMenuCommand,
+  GM_addStyle as imp_addStyle,
 } from '$';
 
 function scanSandbox() {
@@ -22,3 +23,4 @@ export const GM_registerMenuCommand = sb ? sb.GM_registerMenuCommand : imp_regis
 export const GM_unregisterMenuCommand = sb
   ? sb.GM_unregisterMenuCommand
   : imp_unregisterMenuCommand;
+export const GM_addStyle = sb ? sb.GM_addStyle : imp_addStyle;

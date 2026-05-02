@@ -2,50 +2,57 @@
 
 ## Layout
 
-- `src/main.js` — entry, wires modules.
-- `src/features.js` — feature toggles + GM\_\*Value helpers.
-- `src/perPage.js` — perPage URL force.
-- `src/styles.js` — toggles feature classes on `<html>`.
-- `src/styles.css` — all userscript CSS, injected automatically by vite-plugin-monkey via `GM_addStyle`. Edit CSS HERE, never inline.
+- `src/main.js` — entry; wires features, runs `refresh()` on load + observer.
+- `src/features.js` — feature toggles + `get`/`put` helpers.
+- `src/gm.js` — `GM_*` import shim; falls back to scanning `document.__monkeyWindow-*` keys when dev cache breaks.
+- `src/constants.js` — selectors + class names.
+- `src/styles.css` — userscript CSS (auto-injected via `GM_addStyle`). Edit CSS HERE, never inline.
+- `src/dark.user.css` — dark-theme overrides (CSS variables, surface/text rules, SVG fill recolor). `.user.css` extension so raw GitHub URL auto-installs in Stylus.
+- `src/styles.js` — toggles `inex-ge-*` classes on `<html>`.
+- `src/perPage.js` — adds `?perPage=20` if missing; rewrites broken `<select name="perPage">` option values.
 - `src/lastStatus.js` — Flight cell replacement, MutationObserver loop.
-- `src/sort.js` — header rename + arrival-date sort.
+- `src/sort.js` — header rename + bucket-based arrival sort. Disabled when pagination links exist.
+- `src/translate.js` — Georgian→English status map.
+- `src/tracking.js` — replaces truncated `span.tracking` text with `data-original-title`.
+- `src/description.js` — strips price prefix from `td.description` via `data-original-title`.
 - `src/menu.js` — Tampermonkey/Violentmonkey menu commands.
-- `src/constants.js` — shared attribute names.
-- `vite.config.mjs` — userscript metadata block lives here. Edit metadata HERE, never in built output.
-- `dist/inex-ge.user.js` — local build output, **gitignored** on master.
-- **`release` branch** — orphan branch holding only the built `inex-ge.user.js` at root. Force-pushed by CI on every master push. Public install URL points here.
+- `vite.config.mjs` — userscript metadata block. `@match: https://inex.ge/*`.
+- `dist/inex-ge.user.js` — local build, gitignored on master. CI force-pushes to `release` branch on master push.
 
 ## Commands
 
-- `npm run dev` — vite dev server with HMR. Opens an install page (`http://localhost:PORT/`) that points the userscript engine to the live module graph. Edit `src/**` → page reloads automatically.
-- `npm run build` — emits `dist/inex-ge.user.js` locally. Do not commit. CI publishes to `release` branch on master push.
-- `npm run lint` — ESLint flat config, scopes `src/**/*.js` only.
+- `npm run dev` — vite dev server with HMR. Install URL: `http://127.0.0.1:5173/__vite-plugin-monkey.install.user.js`. Reinstall after every dev restart (vite caches deps with stale `monkeyWindow` key).
+- `npm run build` — emits `dist/inex-ge.user.js`.
+- `npm run lint` — ESLint flat config, scopes `src/**/*.js`.
 - `npm run format` — Prettier check. Use `npx prettier --write .` to fix.
+- `make ci` — install + lint + format + build. Run before commit.
 
 ## GM\_\* APIs
 
-Import from `'$'` (vite-plugin-monkey client alias). `autoGrant` adds `@grant` lines automatically based on imports — no manual grant list. Example:
+Import from `'./gm.js'`, never from `'$'` directly. The shim handles the dev-mode cache issue where `vite-plugin-monkey` serves stale client.js with old `monkeyWindow` key. Import grants are still detected because `gm.js` re-exports from `'$'`.
 
 ```js
-import { GM_getValue, GM_setValue } from '$';
+import { GM_getValue, GM_setValue } from './gm.js';
 ```
 
-## Browser context for Claude
+## Browser context
 
-Playwright MCP is available. Inspection loop:
+Playwright MCP runs against the dev server. Inspection loop:
 
-1. User runs `npm run dev` and opens inex.ge logged in. (User must log in once — Claude can't.)
-2. `mcp__plugin_playwright_playwright__browser_navigate` to `https://inex.ge/en/room/parcels`.
-3. `browser_snapshot` for DOM tree, `browser_console_messages` for `[inex-ge]` logs, `browser_evaluate` for ad-hoc DOM queries.
-4. After edits, vite HMR reloads — re-snapshot to verify.
+1. User must have `npm run dev` running and be logged into inex.ge once.
+2. `mcp__playwright-chrome__browser_navigate` to a page.
+3. `browser_evaluate` for ad-hoc DOM queries.
+4. After CSS edits, vite HMR auto-reloads — re-query.
+5. Skip screenshots in repo root (gitignored, but project dirty). Save to `.playwright-mcp/` (already ignored) and clean up after.
 
-## Versioning
+## Feature contract
 
-- `package.json` `version` drives the `@version` field in built userscript.
-- Bump version on every shipped change.
+Every feature: toggleable via menu, default on, persisted in `GM_*Value`, takes effect on next `refresh()`. `refresh()` runs at load + on `tbody` mutations. Order matters: `translateStatuses` → `applyLastStatus` (reads tooltip text) → `expandTracking` → `stripDescriptionPrice`.
 
 ## Conventions
 
-- No comments unless WHY non-obvious (CLAUDE-global rule).
-- Surgical changes, no drive-by refactors.
-- Match existing style in `src/`.
+- No comments unless WHY non-obvious.
+- Surgical changes; no drive-by refactors.
+- Match existing style.
+- Dark CSS uses variables (`--inex-bg`, `--inex-surface`, `--inex-text`, etc). Bump specificity (`.parcel-home .x .y`) when site uses `!important` + multi-class selectors.
+- Bump `package.json` version on every shipped change.

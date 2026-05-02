@@ -1,0 +1,240 @@
+/* ==UserStyle==
+@name           inex.ge dark
+@namespace      github.com/Mayurifag/inex-ge-userscript
+@version        1.0.0
+@description    Dark theme for inex.ge — readable surfaces, recolored icons, no white panels.
+@author         Mayurifag
+@homepageURL    https://github.com/Mayurifag/inex-ge-userscript
+@supportURL     https://github.com/Mayurifag/inex-ge-userscript/issues
+@updateURL      https://raw.githubusercontent.com/Mayurifag/inex-ge-userscript/master/src/dark.user.css
+@license        MIT
+@preprocessor   default
+==/UserStyle== */
+
+@-moz-document domain("inex.ge") {
+  html:root {
+    --inex-bg: #13161e;
+    --inex-surface: #1c2030;
+    --inex-surface-2: #2a3144;
+    --inex-border: #3a4156;
+    --inex-text: #f0f0f0;
+    --inex-text-dim: #a8acb6;
+    --inex-link: #ff6b6b;
+    --inex-status: #4dd17b;
+    --inex-arrival: #ff8a8a;
+  }
+
+  html:root,
+  html:root body {
+    background: var(--inex-bg) !important;
+    color: var(--inex-text) !important;
+  }
+
+  html:root .header,
+  html:root .footer,
+  html:root .leftBarWrapper,
+  html:root .dropDownWrapper,
+  html:root .info,
+  html:root .readMore,
+  html:root .slide,
+  html:root .calculatorWrapper,
+  html:root .calculator,
+  html:root .itemInput,
+  html:root .feedback,
+  html:root .modal,
+  html:root .modal-content,
+  html:root .card,
+  html:root .resultsWrapper,
+  html:root .toolTipWrapper,
+  html:root .userDropDown,
+  html:root .sliderMainBackground,
+  html:root .trackingInfoWrapper,
+  html:root .calcHeader,
+  html:root ul.dropdown,
+  html:root .userInfo,
+  html:root .parcelsWrapper,
+  html:root .my-parcel,
+  html:root .advantagesWrapper .item > a,
+  html:root .advantagesWrapper .item > div,
+  html:root .feedback-btn,
+  html:root .leftBarWrapper .item.active,
+  html:root .filtersWrapper .activeItem,
+  html:root .userTab,
+  html:root .userTabs,
+  html:root .userTab .item,
+  html:root .countries .item,
+  html:root .countries .item.active,
+  html:root .addressTable,
+  html:root .tableIcon,
+  html:root .status.student,
+  html:root .faqs-contact,
+  html:root .form-group,
+  html:root .tableHeader,
+  html:root .addressInfo,
+  html:root .news-wrapper,
+  html:root .newsItem,
+  html:root .static-page .grid .item,
+  html:root .static-page .content .item,
+  html:root .allFlights,
+  html:root .switch,
+  html:root .inbox,
+  html:root .inboxWrapper,
+  html:root .inboxInfo,
+  html:root .message,
+  html:root .settingsWrapper,
+  html:root table.table,
+  html:root table.table thead,
+  html:root table.table tbody,
+  html:root table.table tbody tr {
+    background: var(--inex-surface) !important;
+    color: var(--inex-text) !important;
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root table.table tbody tr:hover {
+    background: var(--inex-surface-2) !important;
+  }
+
+  html:root table.table tbody td,
+  html:root table.table thead th {
+    border-color: transparent !important;
+  }
+
+  html:root .leftBarWrapper .iconWrapper img {
+    filter: invert(1);
+  }
+
+  html:root .leftBarWrapper .item.active {
+    background: var(--inex-surface-2) !important;
+    border-left: 3px solid var(--inex-link) !important;
+  }
+
+  html:root .leftBarWrapper svg path,
+  html:root .leftBarWrapper svg rect,
+  html:root .leftBarWrapper svg circle {
+    fill: var(--inex-text) !important;
+  }
+
+  html:root .leftBarWrapper .item.active svg path,
+  html:root .leftBarWrapper .item.active svg rect,
+  html:root .leftBarWrapper .item.active svg circle {
+    fill: var(--inex-link) !important;
+  }
+
+  html:root h1,
+  html:root h2,
+  html:root h3,
+  html:root h4,
+  html:root p,
+  html:root span,
+  html:root th,
+  html:root td,
+  html:root a,
+  html:root label,
+  html:root li,
+  html:root strong,
+  html:root b,
+  html:root i,
+  html:root em,
+  html:root .howTo,
+  html:root .title,
+  html:root .subTitle,
+  html:root .text,
+  html:root .description,
+  html:root .item,
+  html:root .navItem,
+  html:root .name,
+  html:root .itemName,
+  html:root .itemPrice,
+  html:root .uInfo,
+  html:root .item.active,
+  html:root .userTabs .item,
+  html:root .userTabs .item.active,
+  html:root .static-page .content .text,
+  html:root .static-page .content .text *,
+  html:root .procedures .content .text *,
+  html:root main .content .text *,
+  html:root main p,
+  html:root main strong,
+  html:root main b,
+  html:root main i {
+    color: var(--inex-text) !important;
+  }
+
+  html:root a:hover {
+    color: var(--inex-link) !important;
+  }
+
+  html:root input,
+  html:root select,
+  html:root textarea {
+    background: var(--inex-surface) !important;
+    color: var(--inex-text) !important;
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root .toolTipWrapper::before {
+    border-top-color: var(--inex-surface) !important;
+  }
+
+  html:root [style*='background-color: rgb(255, 255, 255)'],
+  html:root [style*='background: rgb(255, 255, 255)'],
+  html:root [style*='background-color:#fff'],
+  html:root [style*='background:#fff'] {
+    background-color: var(--inex-surface) !important;
+    color: var(--inex-text) !important;
+  }
+
+  html:root svg path[fill='#292D32'],
+  html:root svg path[fill='#090D14'],
+  html:root svg path[fill='#555759'],
+  html:root svg path[fill='#162234'],
+  html:root svg path[fill='#000'],
+  html:root svg path[fill='#000000'],
+  html:root svg path[stroke='#292D32'],
+  html:root svg path[stroke='#090D14'],
+  html:root svg path[stroke='#555759'],
+  html:root svg path[stroke='#162234'] {
+    fill: var(--inex-text) !important;
+    stroke: var(--inex-text) !important;
+  }
+
+  html:root svg path[fill='#EDEDED'],
+  html:root svg path[fill='#F2F2F2'],
+  html:root svg path[fill='#EBEBEB'],
+  html:root svg path[fill='#fff'],
+  html:root svg path[fill='#FFF'],
+  html:root svg path[fill='#FFFFFF'],
+  html:root svg path[fill='white'] {
+    fill: var(--inex-surface-2) !important;
+  }
+
+  html:root .header img[src*='headerLogo'],
+  html:root .footer img[src*='headerLogo'] {
+    filter: invert(1) brightness(1.2);
+  }
+
+  html:root .header .navBar {
+    border-color: transparent !important;
+  }
+
+  html:root .header .navBar:hover {
+    border-color: var(--inex-link) !important;
+  }
+
+  html:root .parcel-home .toolTipWrapper .numberWrapper p,
+  html:root .parcel-home .toolTipWrapper .numberWrapper .date,
+  html:root .parcel-home .toolTipWrapper .numberWrapper h1,
+  html:root .parcel-home .toolTipWrapper .numberWrapper h2,
+  html:root .parcel-home .toolTipWrapper .numberWrapper li {
+    color: var(--inex-text) !important;
+  }
+
+  html:root .inex-ge-status {
+    color: var(--inex-status) !important;
+  }
+
+  html:root .inex-ge-arrival {
+    color: var(--inex-arrival) !important;
+  }
+}
