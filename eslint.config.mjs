@@ -3,19 +3,25 @@ import globals from 'globals';
 import prettier from 'eslint-config-prettier/flat';
 
 export default [
-  { ignores: ['node_modules/**'] },
+  { ignores: ['node_modules/**', 'dist/**'] },
   js.configs.recommended,
   {
-    files: ['*.user.js'],
+    files: ['src/**/*.js'],
     languageOptions: {
       ecmaVersion: 2024,
-      sourceType: 'script',
+      sourceType: 'module',
       globals: {
         ...globals.browser,
-        GM_getValue: 'readonly',
-        GM_setValue: 'readonly',
-        GM_registerMenuCommand: 'readonly',
-        GM_unregisterMenuCommand: 'readonly',
+      },
+    },
+  },
+  {
+    files: ['vite.config.mjs', 'eslint.config.mjs'],
+    languageOptions: {
+      ecmaVersion: 2024,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
       },
     },
   },

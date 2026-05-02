@@ -1,7 +1,13 @@
-.PHONY: install lint format ci clean
+.PHONY: install dev build lint format ci clean
 
 install:
 	npm ci
+
+dev:
+	npm run dev
+
+build:
+	npm run build
 
 lint:
 	npx eslint .
@@ -9,7 +15,7 @@ lint:
 format:
 	npx prettier --check .
 
-ci: install lint format
+ci: install lint format build
 
 clean:
-	rm -rf node_modules
+	rm -rf node_modules dist

@@ -56,15 +56,31 @@ All DOM targeting uses **stable class selectors**, never visible text — page m
 - `@icon data:image/svg+xml;base64,...` — inlined SVG (parcel/box silhouette, single-color, ~64×64). Hard-coded into the source; no build step generates it, no separate `icon.svg` file.
 - `@homepageURL https://github.com/Mayurifag/inex-ge-userscript`
 - `@supportURL https://github.com/Mayurifag/inex-ge-userscript/issues`
-- `@updateURL https://raw.githubusercontent.com/Mayurifag/inex-ge-userscript/master/inex-ge.user.js`
-- `@downloadURL https://raw.githubusercontent.com/Mayurifag/inex-ge-userscript/master/inex-ge.user.js`
+- `@updateURL https://raw.githubusercontent.com/Mayurifag/inex-ge-userscript/release/inex-ge.user.js`
+- `@downloadURL https://raw.githubusercontent.com/Mayurifag/inex-ge-userscript/release/inex-ge.user.js`
+
+## Install
+
+[![Install](https://img.shields.io/badge/install-userscript-brightgreen)](https://raw.githubusercontent.com/Mayurifag/inex-ge-userscript/release/inex-ge.user.js)
+
+Open the URL above in a browser with Violentmonkey/Tampermonkey installed and confirm the install. Updates auto-pull via `@updateURL`.
 
 ## Project layout
 
 ~~~
 .
-├── inex-ge.user.js
+├── src/
+│   ├── main.js
+│   ├── features.js
+│   ├── perPage.js
+│   ├── styles.js
+│   ├── lastStatus.js
+│   ├── sort.js
+│   ├── menu.js
+│   └── constants.js
+├── vite.config.mjs
 ├── eslint.config.mjs
+├── CLAUDE.md
 ├── .editorconfig
 ├── .prettierrc
 ├── .prettierignore
@@ -78,27 +94,40 @@ All DOM targeting uses **stable class selectors**, never visible text — page m
     └── dependabot.yml
 ~~~
 
-Single-file userscript at repo root. No build, no `dist/` — `inex-ge.user.js` is the deliverable.
+Sources live in `src/`. Vite + `vite-plugin-monkey` bundle to `dist/inex-ge.user.js` (gitignored). CI force-pushes the built file to the **`release` branch**, which is the public install path. master never holds the build artefact.
 
 ## Tooling
 
 - **Node**: pin via `mise.toml` (24.x).
 - **Package manager**: npm (lockfile committed).
-- **Linter**: ESLint flat config (`eslint.config.mjs`) using `@eslint/js` recommended + userscript globals (`GM_*`).
+- **Bundler**: Vite + [`vite-plugin-monkey`](https://github.com/lisonge/vite-plugin-monkey). Userscript metadata block is configured in `vite.config.mjs`. `GM_*` APIs are imported from the `'$'` alias; `autoGrant` injects `@grant` lines automatically.
+- **Linter**: ESLint flat config (`eslint.config.mjs`) using `@eslint/js` recommended + browser globals on `src/**/*.js`.
 - **Formatter**: Prettier. ESLint defers formatting via `eslint-config-prettier/flat`.
 - **EditorConfig**: 2-space indent, LF, UTF-8, trim trailing whitespace, final newline.
-- **Git**: `.gitignore` for `node_modules/`, OS junk.
+- **Git**: `.gitignore` for `node_modules/`, `dist/`, OS junk.
 - **Dependabot**: weekly PRs for npm + GitHub Actions ecosystems (`.github/dependabot.yml`). CI guards each PR.
+
+## Dev
+
+- `npm run dev` — vite serves the entry; the printed URL installs a dev userscript that hot-reloads as `src/**` changes.
+- `npm run build` — emits `dist/inex-ge.user.js`.
+- `npm run lint`, `npm run format` — flat ESLint + Prettier checks.
 
 ## Makefile
 
 `make ci` is the single entry point CI runs. Locally too.
 
 ~~~makefile
-.PHONY: install lint format ci clean
+.PHONY: install dev build lint format ci clean
 
 install:
 	npm ci
+
+dev:
+	npm run dev
+
+build:
+	npm run build
 
 lint:
 	npx eslint .
@@ -106,23 +135,19 @@ lint:
 format:
 	npx prettier --check .
 
-ci: install lint format
+ci: install lint format build
 
 clean:
-	rm -rf node_modules
+	rm -rf node_modules dist
 ~~~
 
 ## CI
 
 - GitHub Actions workflow at `.github/workflows/ci.yml`.
 - Runs on push and PR to `master`.
-- Single job: checkout → setup-node (Node 24) → `make ci`.
-- `permissions: contents: read` and `concurrency` cancel-in-progress for hygiene.
-
-## Release (later, optional)
-
-- Tag-driven release workflow that publishes `inex-ge.user.js` to a GitHub Release.
-- `@updateURL` / `@downloadURL` could later point at the latest release asset instead of `master`.
+- Single job: checkout → setup-node (Node 24) → `make ci` (lint + format + build).
+- On push to `master`, the built file is force-pushed to the orphan `release` branch. The `release` branch always holds a single commit with `inex-ge.user.js` at root, which is the URL `@updateURL`/`@downloadURL` resolve.
+- `permissions: contents: write` (needed for the release branch push). `concurrency` cancels in-progress runs.
 
 ## DOM reference (resolved from sample HTML)
 
@@ -181,7 +206,6 @@ clean:
 
 ## Things to work on
 
-0) how to get the browser extension to check the work itself? autoreload src? and so on
 1) Lingvist still doesnt translate reliably. well, it works..
 2) Hover on last status doesnt work
 3) Sorting should put unknown first I guess?

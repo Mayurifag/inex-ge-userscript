@@ -5,9 +5,10 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
+  workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -23,3 +24,21 @@ jobs:
           node-version: 24
           cache: npm
       - run: make ci
+
+      - name: Publish to release branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.sha }}
+        run: |
+          set -e
+          STAGE=$(mktemp -d)
+          cp dist/inex-ge.user.js "$STAGE/"
+          cd "$STAGE"
+          git init -q -b release
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add inex-ge.user.js
+          git commit -q -m "release ${SHA}"
+          git push -f -q "https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO}.git" HEAD:release

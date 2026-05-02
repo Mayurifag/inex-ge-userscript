@@ -1,12 +1,16 @@
 {
   "name": "inex-ge-userscript",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "Violentmonkey userscript for inex.ge parcels page.",
+  "type": "module",
   "engines": {
     "node": ">=24"
   },
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "lint": "eslint .",
     "format": "prettier --check ."
   },
@@ -15,6 +19,8 @@
     "eslint": "^10.2.1",
     "eslint-config-prettier": "^10.1.8",
     "globals": "^17.6.0",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "vite": "^7.3.2",
+    "vite-plugin-monkey": "^7.1.9"
   }
 }
