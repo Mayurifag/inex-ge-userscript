@@ -1,4 +1,9 @@
+function isParcelsPage() {
+  return /\/room\/parcels(?:\/|\?|$)/.test(window.location.pathname + window.location.search);
+}
+
 export function applyPerPage() {
+  if (!isParcelsPage()) return;
   const url = new URL(window.location.href);
   if (url.searchParams.has('perPage')) return;
   url.searchParams.set('perPage', '20');

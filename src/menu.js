@@ -1,4 +1,4 @@
-import { GM_registerMenuCommand, GM_unregisterMenuCommand } from '$';
+import { GM_registerMenuCommand, GM_unregisterMenuCommand } from './gm.js';
 import { FEATURES, get, put } from './features.js';
 import { applyStyles } from './styles.js';
 

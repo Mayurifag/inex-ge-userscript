@@ -207,4 +207,4 @@ clean:
 
 ## Things to work on
 
-1) dark theme?
+1) readme rewrite
