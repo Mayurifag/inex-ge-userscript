@@ -7,7 +7,13 @@ html.inex-ge-hide-takeout table.table tbody tr:has(td.status .takeout) {
   display: none !important;
 }
 
-html.inex-ge-hide-tracking-date table.table tbody tr > td:first-child p {
+html.inex-ge-remove-clutter table.table tbody tr > td:first-child p {
+  display: none !important;
+}
+
+html.inex-ge-remove-clutter .parcelHead,
+html.inex-ge-remove-clutter .filtersWrapper,
+html.inex-ge-remove-clutter .searchWrapper {
   display: none !important;
 }
 
@@ -21,17 +27,41 @@ html.inex-ge-hide-tracking-date table.table tbody tr > td:first-child p {
 }
 
 .inex-ge-status {
-  color: green;
+  color: rgb(45, 164, 71) !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .inex-ge-arrival {
-  color: red;
+  color: red !important;
 }
 
-.inex-ge-tip {
-  display: none;
+table.table tbody tr td.price p {
+  white-space: nowrap;
+}
+
+td.flightNumber[data-inex-ge-replaced] {
+  position: relative;
+}
+
+td.flightNumber[data-inex-ge-replaced] .toolTip {
+  background-image: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  position: static !important;
+}
+
+td.flightNumber[data-inex-ge-replaced] .toolTipWrapper {
+  left: 50% !important;
+  transform: translateX(-50%);
+  z-index: 1001;
+}
+
+td.flightNumber[data-inex-ge-replaced]:hover .toolTipWrapper {
+  visibility: visible !important;
 }

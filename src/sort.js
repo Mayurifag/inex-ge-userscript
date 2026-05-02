@@ -2,7 +2,7 @@ import { FEATURES, get } from './features.js';
 import {
   ARRIVAL_DATA,
   HEADER_TEXT,
-  REPLACED_ATTR,
+  HEADER_RENAMED_ATTR,
   SEL_FLIGHT_HEAD,
   SEL_TBODY,
 } from './constants.js';
@@ -28,17 +28,28 @@ function getRowArrival(tr) {
   return arrival;
 }
 
+function bucketKey(tr) {
+  const span = tr.querySelector('td.status span');
+  const cls = span?.className ?? '';
+  const arrival = parseDmy(getRowArrival(tr));
+  if (cls.includes('takeout')) return [3, 0];
+  if (cls.includes('parcel-outline-success')) return [0, 0];
+  if (arrival != null) return [1, arrival];
+  if (cls.includes('parcel-outline-warning')) return [2, 0];
+  return [3, 0];
+}
+
 function sortByArrival(th, tbody) {
   const cur = th.dataset.inexGeSort;
   const dir = cur === 'asc' ? 'desc' : 'asc';
+  const sign = dir === 'asc' ? 1 : -1;
   const rows = Array.from(tbody.querySelectorAll('tr'));
+  const keys = new Map(rows.map((r) => [r, bucketKey(r)]));
   rows.sort((a, b) => {
-    const da = parseDmy(getRowArrival(a));
-    const db = parseDmy(getRowArrival(b));
-    if (da == null && db == null) return 0;
-    if (da == null) return 1;
-    if (db == null) return -1;
-    return dir === 'asc' ? da - db : db - da;
+    const [ba, va] = keys.get(a);
+    const [bb, vb] = keys.get(b);
+    if (ba !== bb) return sign * (ba - bb);
+    return sign * (va - vb);
   });
   for (const r of rows) tbody.appendChild(r);
   th.dataset.inexGeSort = dir;
@@ -48,6 +59,10 @@ function sortByArrival(th, tbody) {
 function setHeaderText(th, dir) {
   const arrow = dir === 'asc' ? ' ▲' : dir === 'desc' ? ' ▼' : '';
   th.textContent = HEADER_TEXT + arrow;
+}
+
+function hasPagination() {
+  return document.querySelectorAll('a.page').length > 0;
 }
 
 function attachSort(th) {
@@ -66,9 +81,9 @@ function attachSort(th) {
 export function renameHeader() {
   const th = document.querySelector(SEL_FLIGHT_HEAD);
   if (!th) return;
-  if (th.getAttribute(REPLACED_ATTR) !== '1') {
+  if (th.getAttribute(HEADER_RENAMED_ATTR) !== '1') {
     setHeaderText(th, th.dataset.inexGeSort);
-    th.setAttribute(REPLACED_ATTR, '1');
+    th.setAttribute(HEADER_RENAMED_ATTR, '1');
   }
-  if (get(FEATURES.sortByArrival.key)) attachSort(th);
+  if (get(FEATURES.sortByArrival.key) && !hasPagination()) attachSort(th);
 }

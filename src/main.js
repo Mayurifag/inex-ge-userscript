@@ -4,12 +4,14 @@ import { applyPerPage, fixPerPageOptions } from './perPage.js';
 import { applyStyles } from './styles.js';
 import { applyLastStatus, startObserver } from './lastStatus.js';
 import { renameHeader } from './sort.js';
+import { expandTracking } from './tracking.js';
+import { stripDescriptionPrice } from './description.js';
 import { registerMenu } from './menu.js';
 
-console.log('[inex-ge] script loaded', { url: location.href });
-
-function runLastStatus() {
+function refresh() {
   applyLastStatus(renameHeader);
+  expandTracking();
+  stripDescriptionPrice();
 }
 
 if (get(FEATURES.perPage.key)) {
@@ -17,6 +19,6 @@ if (get(FEATURES.perPage.key)) {
   fixPerPageOptions();
 }
 applyStyles();
-runLastStatus();
-startObserver(runLastStatus);
-registerMenu({ onLastStatusEnable: runLastStatus, onSortEnable: renameHeader });
+refresh();
+startObserver(refresh);
+registerMenu(refresh);

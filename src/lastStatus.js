@@ -1,11 +1,11 @@
 import { FEATURES, get } from './features.js';
-import { ARRIVAL_DATA, REPLACED_ATTR, SEL_FLIGHT_TD, SEL_TBODY } from './constants.js';
+import { ARRIVAL_DATA, CELL_REPLACED_ATTR, SEL_FLIGHT_TD, SEL_TBODY } from './constants.js';
 
 const REFRESH_DEBOUNCE_MS = 150;
 const LOG = '[inex-ge]';
 
 export function extractInfo(td) {
-  const tip = td.querySelector('div.toolTip, .inex-ge-tip');
+  const tip = td.querySelector('div.toolTip');
   if (!tip) return null;
 
   let arrival = '';
@@ -44,14 +44,11 @@ function refreshSummary(td, aNode, sNode) {
 }
 
 function replaceCell(td) {
-  if (td.getAttribute(REPLACED_ATTR)) return;
+  if (td.getAttribute(CELL_REPLACED_ATTR)) return;
   const tip = td.querySelector('div.toolTip');
   if (!tip) return;
   const info = extractInfo(td);
   if (!info) return;
-
-  tip.classList.remove('toolTip');
-  tip.classList.add('inex-ge-tip');
 
   const sText = info.statusText || '—';
   const s = document.createElement('span');
@@ -87,7 +84,7 @@ function replaceCell(td) {
   });
   obs.observe(tip, { characterData: true, subtree: true, childList: true });
 
-  td.setAttribute(REPLACED_ATTR, '1');
+  td.setAttribute(CELL_REPLACED_ATTR, '1');
 }
 
 export function applyLastStatus(renameHeader) {

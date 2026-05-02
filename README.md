@@ -207,9 +207,4 @@ clean:
 
 ## Things to work on
 
-1) Lingvist still doesnt translate reliably. well, it works..
-2) Hover on last status doesnt work
-3) Sorting should put unknown first I guess?
-4) perPage bug - the page one doesnt work correctly with mine. think whats wrong?
-5) CODEREVIEW
-6) dark theme?
+1) dark theme?
