@@ -1,3 +1,4 @@
+import './styles.css';
 import { FEATURES, get } from './features.js';
 import { applyPerPage } from './perPage.js';
 import { applyStyles } from './styles.js';

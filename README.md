@@ -27,7 +27,7 @@ All DOM targeting uses **stable class selectors**, never visible text — page m
 5. **Replace Flight number cell content** — column 4 (`td.flightNumber`). Rebuild cell as **two stacked rows, always rendered**:
    - Row 1 (red): `Arrival: DD.MM.YYYY` — pulled from the red `<p>` inside the original tooltip. Falls back to `Arrival: —` when absent so the cell height stays consistent.
    - Row 2 (green, single line, ellipsis on overflow): latest active status text from `<li><p.active></p></li>` (fallback: last `<li>`). Falls back to `—` when absent.
-   - The original tooltip subtree is preserved but its `.toolTip` class is renamed to `.inex-ge-tip` to detach from any site CSS. Userscript-injected rules then position it absolutely under the cell and reveal it via `td.flightNumber:hover` — i.e. hovering anywhere over the cell shows the full tracking history. Origin-country `<p>` sibling is hidden inline.
+   - The original tooltip subtree is preserved (renamed `.toolTip` → `.inex-ge-tip`, hidden via CSS) so the per-cell `MutationObserver` can refresh status text in place when the site updates the tooltip data. Hover-to-reveal is **not implemented yet** — to be added later.
    - Both rows use `font: inherit` so styling matches the surrounding cell.
    - Column header renamed to **"Last status"** (single label, no per-locale variants).
 6. **Sort by arrival date on header click** — clicking the **"Last status"** header sorts rows by estimated arrival date. First click ascending, second descending; arrow indicator (▲/▼) appended to header text. Stable sort. Rows missing an arrival date sink to the bottom. Sort state is per page load; not persisted.
@@ -74,6 +74,7 @@ Open the URL above in a browser with Violentmonkey/Tampermonkey installed and co
 │   ├── features.js
 │   ├── perPage.js
 │   ├── styles.js
+│   ├── styles.css
 │   ├── lastStatus.js
 │   ├── sort.js
 │   ├── menu.js
@@ -210,6 +211,5 @@ clean:
 2) Hover on last status doesnt work
 3) Sorting should put unknown first I guess?
 4) perPage bug - the page one doesnt work correctly with mine. think whats wrong?
-5) Every layout fix (mobile/tablet/...) - Last status too big - mobile fix didnt work at all
-6) CODEREVIEW
-7) dark theme?
+5) CODEREVIEW
+6) dark theme?

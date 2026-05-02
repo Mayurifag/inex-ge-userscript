@@ -1,5 +1,11 @@
 import { FEATURES, get } from './features.js';
-import { ARRIVAL_DATA, HEADER_TEXT, REPLACED_ATTR } from './constants.js';
+import {
+  ARRIVAL_DATA,
+  HEADER_TEXT,
+  REPLACED_ATTR,
+  SEL_FLIGHT_HEAD,
+  SEL_TBODY,
+} from './constants.js';
 import { extractInfo } from './lastStatus.js';
 
 const SORT_BOUND_ATTR = 'data-inex-ge-sort-bound';
@@ -46,7 +52,7 @@ function setHeaderText(th, dir) {
 
 function attachSort(th) {
   if (th.getAttribute(SORT_BOUND_ATTR) === '1') return;
-  const tbody = document.querySelector('table.table tbody');
+  const tbody = document.querySelector(SEL_TBODY);
   if (!tbody) return;
   th.style.cursor = 'pointer';
   th.style.userSelect = 'none';
@@ -58,7 +64,7 @@ function attachSort(th) {
 }
 
 export function renameHeader() {
-  const th = document.querySelector('table.table thead tr th:nth-child(4)');
+  const th = document.querySelector(SEL_FLIGHT_HEAD);
   if (!th) return;
   if (th.getAttribute(REPLACED_ATTR) !== '1') {
     setHeaderText(th, th.dataset.inexGeSort);

@@ -5,7 +5,8 @@
 - `src/main.js` — entry, wires modules.
 - `src/features.js` — feature toggles + GM\_\*Value helpers.
 - `src/perPage.js` — perPage URL force.
-- `src/styles.js` — runtime CSS rules.
+- `src/styles.js` — toggles feature classes on `<html>`.
+- `src/styles.css` — all userscript CSS, injected automatically by vite-plugin-monkey via `GM_addStyle`. Edit CSS HERE, never inline.
 - `src/lastStatus.js` — Flight cell replacement, MutationObserver loop.
 - `src/sort.js` — header rename + arrival-date sort.
 - `src/menu.js` — Tampermonkey/Violentmonkey menu commands.

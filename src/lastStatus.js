@@ -1,20 +1,11 @@
 import { FEATURES, get } from './features.js';
-import { ARRIVAL_DATA, REPLACED_ATTR } from './constants.js';
+import { ARRIVAL_DATA, REPLACED_ATTR, SEL_FLIGHT_TD, SEL_TBODY } from './constants.js';
 
 const REFRESH_DEBOUNCE_MS = 150;
 const LOG = '[inex-ge]';
 
-const ROW_STYLE =
-  'display:block;font-family:inherit;font-size:12px;line-height:1.3;font-weight:normal;';
-const ARRIVAL_STYLE = `${ROW_STYLE}color:red;`;
-const STATUS_STYLE = `${ROW_STYLE}color:green;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;`;
-const TIP_STYLE_BASE =
-  'position:absolute;left:0;top:100%;z-index:99999;background:#fff;color:#000;border:1px solid #ccc;padding:8px;box-shadow:0 2px 8px rgba(0,0,0,0.2);font-family:inherit;font-size:12px;line-height:1.4;white-space:normal;min-width:220px;max-width:420px;text-align:left;';
-const TIP_STYLE_HIDDEN = `${TIP_STYLE_BASE}display:none;`;
-const TIP_STYLE_SHOWN = `${TIP_STYLE_BASE}display:block;`;
-
 export function extractInfo(td) {
-  const tip = td.querySelector('div.toolTip');
+  const tip = td.querySelector('div.toolTip, .inex-ge-tip');
   if (!tip) return null;
 
   let arrival = '';
@@ -61,15 +52,11 @@ function replaceCell(td) {
 
   tip.classList.remove('toolTip');
   tip.classList.add('inex-ge-tip');
-  tip.setAttribute('style', TIP_STYLE_HIDDEN);
-
-  td.style.position = 'relative';
-  td.style.overflow = 'visible';
+  td.classList.add('inex-ge-flight-cell');
 
   const sText = info.statusText || '—';
   const s = document.createElement('span');
   s.className = 'inex-ge-status';
-  s.setAttribute('style', STATUS_STYLE);
   const sNode = document.createTextNode(sText);
   s.appendChild(sNode);
 
@@ -78,7 +65,6 @@ function replaceCell(td) {
   if (info.arrival) {
     a = document.createElement('span');
     a.className = 'inex-ge-arrival';
-    a.setAttribute('style', ARRIVAL_STYLE);
     aNode = document.createTextNode(`Estimated arrival: ${info.arrival}`);
     a.appendChild(aNode);
   }
@@ -88,13 +74,6 @@ function replaceCell(td) {
 
   const tr = td.closest('tr');
   if (tr) tr.dataset[ARRIVAL_DATA] = info.arrival;
-
-  td.addEventListener('mouseenter', () => {
-    tip.setAttribute('style', TIP_STYLE_SHOWN);
-  });
-  td.addEventListener('mouseleave', () => {
-    tip.setAttribute('style', TIP_STYLE_HIDDEN);
-  });
 
   let timer = null;
   const obs = new MutationObserver(() => {
@@ -115,11 +94,11 @@ function replaceCell(td) {
 export function applyLastStatus(renameHeader) {
   if (!get(FEATURES.lastStatus.key)) return;
   renameHeader();
-  document.querySelectorAll('table.table tbody td.flightNumber').forEach(replaceCell);
+  document.querySelectorAll(SEL_FLIGHT_TD).forEach(replaceCell);
 }
 
 export function startObserver(onMutation) {
-  const tbody = document.querySelector('table.table tbody');
+  const tbody = document.querySelector(SEL_TBODY);
   if (!tbody) return null;
   const observer = new MutationObserver(() => {
     try {
