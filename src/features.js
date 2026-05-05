@@ -1,6 +1,7 @@
 import { GM_getValue, GM_setValue } from './gm.js';
 
 export const FEATURES = {
+  langRedirect: { key: 'feat.langRedirect', label: 'Redirect /ka/ to /en/' },
   perPage: { key: 'feat.perPage', label: 'Force perPage=20' },
   hideRecipient: { key: 'feat.hideRecipient', label: 'Hide Recipient column' },
   hideTakeout: { key: 'feat.hideTakeout', label: 'Hide takeout parcels' },

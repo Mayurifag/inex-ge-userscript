@@ -37,6 +37,7 @@ table.table tbody tr td.flightNumber .inex-ge-arrival {
 .inex-ge-status {
   color: rgb(45, 164, 71) !important;
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;

@@ -10,6 +10,7 @@ Userscript that makes the [inex.ge](https://inex.ge) parcel tracking page faster
 - **Bigger parcel list by default** — forces `?perPage=20` on first visit; never overrides if you change it.
 - **Replaces the Flight Number column** with the latest status in green and estimated arrival date in red. Original tooltip preserved — hover anywhere on the cell to see full history.
 - **Translates Georgian statuses** to English (e.g. "გამოგზავნილია" → "Sent").
+- **Redirects `/ka/...` URLs to `/en/...`** — Georgian pages bounce to the English version, query and hash preserved.
 - **Sort by arrival date** — click the "Arrival" header. Soonest action first: arrived parcels on top, then by ETA, sent-without-ETA next, takeout/done at the bottom. Disabled when there are multiple pages so you don't get a half-sorted list.
 - **Expanded tracking numbers** — no more `...XXXXX` truncation.
 - **Cleaner description** — drops the `12.34 CNY -` price prefix in front of every item name.

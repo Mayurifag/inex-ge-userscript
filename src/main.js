@@ -1,4 +1,5 @@
 import './styles.css';
+import * as langRedirect from './langRedirect.js';
 import * as perPage from './perPage.js';
 import * as darkTheme from './darkTheme.js';
 import * as hideRecipient from './hideRecipient.js';
@@ -11,6 +12,8 @@ import * as translate from './translate.js';
 import * as stripPrice from './stripPrice.js';
 import * as clickGuard from './clickGuard.js';
 import { registerMenu } from './menu.js';
+
+langRedirect.apply();
 
 function init() {
   perPage.apply();

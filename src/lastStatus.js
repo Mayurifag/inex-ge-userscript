@@ -6,10 +6,10 @@ import {
   HEADER_TEXT,
   SEL_FLIGHT_HEAD,
   SEL_FLIGHT_TD,
-  SEL_TBODY,
 } from './constants.js';
 
 const REFRESH_DEBOUNCE_MS = 150;
+const OBSERVER_DEBOUNCE_MS = 50;
 const LOG = '[inex-ge]';
 
 export function extractInfo(td) {
@@ -109,15 +109,48 @@ export function apply() {
 }
 
 export function startObserver(onMutation) {
-  const tbody = document.querySelector(SEL_TBODY);
-  if (!tbody) return null;
-  const observer = new MutationObserver(() => {
-    try {
-      onMutation();
-    } catch (e) {
-      console.error(LOG, e);
+  const table = document.querySelector('table.table');
+  if (!table) return null;
+
+  let timer = null;
+  let boundTbody = null;
+
+  const fire = () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      try {
+        onMutation();
+      } catch (e) {
+        console.error(LOG, e);
+      }
+    }, OBSERVER_DEBOUNCE_MS);
+  };
+
+  const inner = new MutationObserver(fire);
+
+  const bind = (tbody) => {
+    if (tbody === boundTbody) return;
+    inner.disconnect();
+    inner.observe(tbody, { childList: true });
+    inner.observe(tbody, {
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['data-original-title'],
+    });
+    boundTbody = tbody;
+  };
+
+  const initial = table.querySelector('tbody');
+  if (initial) bind(initial);
+
+  const outer = new MutationObserver(() => {
+    const tbody = table.querySelector('tbody');
+    if (tbody && tbody !== boundTbody) {
+      bind(tbody);
+      fire();
     }
   });
-  observer.observe(tbody, { childList: true, subtree: false });
-  return observer;
+  outer.observe(table, { childList: true });
+
+  return { inner, outer };
 }
