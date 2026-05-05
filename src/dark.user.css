@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           inex.ge dark
 @namespace      github.com/Mayurifag/inex-ge-userscript
-@version        1.0.1
+@version        1.0.2
 @description    Dark theme for inex.ge — readable surfaces, recolored icons, no white panels.
 @author         Mayurifag
 @homepageURL    https://github.com/Mayurifag/inex-ge-userscript
@@ -38,6 +38,9 @@
   html:root .leftBarWrapper,
   html:root .dropDownWrapper,
   html:root .info,
+  html:root .infoWrapper,
+  html:root .info a.room,
+  html:root .info a.leaveRoom,
   html:root .readMore,
   html:root .slide,
   html:root .calculatorWrapper,
@@ -209,7 +212,13 @@
   }
 
   html:root .header a.loginButton,
-  html:root .header a.loginButton:hover {
+  html:root .header a.loginButton:hover,
+  html:root .myModal7 .verifyForm .button,
+  html:root .myModal7 .verifyForm .button:hover,
+  html:root .inboxWrapper .inboxInfo .infoHeader .button,
+  html:root .inboxWrapper .inboxInfo .infoHeader .button:hover,
+  html:root a.button,
+  html:root a.button:hover {
     color: var(--inex-on-accent) !important;
   }
 
@@ -259,6 +268,10 @@
 
   html:root img[src*='headerLogo'] {
     filter: invert(1) brightness(1.2);
+  }
+
+  html:root img[src*='avatarBackground'] {
+    display: none !important;
   }
 
   html:root .header .navBar {

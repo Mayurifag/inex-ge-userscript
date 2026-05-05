@@ -13,7 +13,8 @@ html.inex-ge-remove-clutter table.table tbody tr > td:first-child p {
 
 html.inex-ge-remove-clutter .parcelHead,
 html.inex-ge-remove-clutter .filtersWrapper,
-html.inex-ge-remove-clutter .searchWrapper {
+html.inex-ge-remove-clutter .searchWrapper,
+html.inex-ge-remove-clutter .feedback-btn {
   display: none !important;
 }
 
