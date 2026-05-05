@@ -11,12 +11,12 @@ html.inex-ge-remove-clutter table.table tbody tr > td:first-child p {
   display: none !important;
 }
 
-html.inex-ge-expand-tracking div[data-original-title]:has(> span.tracking) > span.tracking {
+html.inex-ge-expand-tracking div[data-inex-tracking] > span.tracking {
   display: none !important;
 }
 
-html.inex-ge-expand-tracking div[data-original-title]:has(> span.tracking)::before {
-  content: attr(data-original-title);
+html.inex-ge-expand-tracking div[data-inex-tracking]::before {
+  content: attr(data-inex-tracking);
   font-size: 14px;
   line-height: 20px;
   letter-spacing: 0.25px;
