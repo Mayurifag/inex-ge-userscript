@@ -5,11 +5,35 @@ export const FEATURES = {
   hideRecipient: { key: 'feat.hideRecipient', label: 'Hide Recipient column' },
   hideTakeout: { key: 'feat.hideTakeout', label: 'Hide takeout parcels' },
   removeClutter: { key: 'feat.removeClutter', label: 'Remove clutter' },
-  lastStatus: { key: 'feat.lastStatus', label: 'Replace Flight number with last status' },
-  sortByArrival: { key: 'feat.sortByArrival', label: 'Sort by arrival date on header click' },
-  expandTracking: { key: 'feat.expandTracking', label: 'Expand truncated tracking number' },
+  lastStatus: {
+    key: 'feat.lastStatus',
+    label: 'Replace Flight number with last status',
+    needsReload: true,
+  },
+  sortByArrival: {
+    key: 'feat.sortByArrival',
+    label: 'Sort by arrival date on header click',
+  },
+  expandTracking: {
+    key: 'feat.expandTracking',
+    label: 'Expand truncated tracking number',
+    needsReload: true,
+  },
   darkTheme: { key: 'feat.darkTheme', label: 'Dark theme' },
-  translateStatus: { key: 'feat.translateStatus', label: 'Translate Georgian statuses' },
+  translateStatus: {
+    key: 'feat.translateStatus',
+    label: 'Translate Georgian statuses',
+    needsReload: true,
+  },
+  stripPrice: {
+    key: 'feat.stripPrice',
+    label: 'Strip price prefix from description',
+    needsReload: true,
+  },
+  clickGuard: {
+    key: 'feat.clickGuard',
+    label: 'Suppress modal click after text-drag',
+  },
 };
 
 export function get(key) {

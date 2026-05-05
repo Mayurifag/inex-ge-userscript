@@ -10,7 +10,7 @@ const STATUS_MAP = {
     'Done, distributing to branches (0–3 days)',
 };
 
-export function translateStatuses() {
+export function apply() {
   if (!get(FEATURES.translateStatus.key)) return;
   for (const p of document.querySelectorAll('.toolTipWrapper ul li p')) {
     if (p.classList.contains('date')) continue;

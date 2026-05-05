@@ -14,7 +14,7 @@ export default defineConfig({
         name: 'inex.ge tweaks',
         namespace: 'https://github.com/Mayurifag/inex-ge-userscript',
         description:
-          'Quality-of-life tweaks for inex.ge parcels page: force perPage=20, hide Recipient column, hide takeout parcels, hide send date in tracking column, replace Flight number cell with two-row last-status info (tooltip preserved, Linguist-friendly), click-to-sort by arrival date.',
+          'Quality-of-life tweaks for inex.ge parcels page: force perPage=20, hide Recipient column, hide takeout parcels, remove clutter, replace Flight cell with last status + arrival, click-to-sort by arrival, expand truncated tracking, translate Georgian statuses, strip price prefix from description, suppress modal click after text-drag, optional dark theme.',
         match: ['https://inex.ge/*'],
         'run-at': 'document-start',
         noframes: true,

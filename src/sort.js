@@ -1,11 +1,5 @@
 import { FEATURES, get } from './features.js';
-import {
-  ARRIVAL_DATA,
-  HEADER_TEXT,
-  HEADER_RENAMED_ATTR,
-  SEL_FLIGHT_HEAD,
-  SEL_TBODY,
-} from './constants.js';
+import { ARRIVAL_DATA, HEADER_TEXT, SEL_FLIGHT_HEAD, SEL_TBODY } from './constants.js';
 import { extractInfo } from './lastStatus.js';
 
 const SORT_BOUND_ATTR = 'data-inex-ge-sort-bound';
@@ -39,7 +33,12 @@ function bucketKey(tr) {
   return [3, 0];
 }
 
-function sortByArrival(th, tbody) {
+function setHeaderArrow(th, dir) {
+  const arrow = dir === 'asc' ? ' ▲' : dir === 'desc' ? ' ▼' : '';
+  th.textContent = HEADER_TEXT + arrow;
+}
+
+function sortRows(th, tbody) {
   const cur = th.dataset.inexGeSort;
   const dir = cur === 'asc' ? 'desc' : 'asc';
   const sign = dir === 'asc' ? 1 : -1;
@@ -53,19 +52,18 @@ function sortByArrival(th, tbody) {
   });
   for (const r of rows) tbody.appendChild(r);
   th.dataset.inexGeSort = dir;
-  setHeaderText(th, dir);
-}
-
-function setHeaderText(th, dir) {
-  const arrow = dir === 'asc' ? ' ▲' : dir === 'desc' ? ' ▼' : '';
-  th.textContent = HEADER_TEXT + arrow;
+  setHeaderArrow(th, dir);
 }
 
 function hasPagination() {
   return document.querySelectorAll('a.page').length > 0;
 }
 
-function attachSort(th) {
+export function apply() {
+  if (!get(FEATURES.sortByArrival.key)) return;
+  if (hasPagination()) return;
+  const th = document.querySelector(SEL_FLIGHT_HEAD);
+  if (!th) return;
   if (th.getAttribute(SORT_BOUND_ATTR) === '1') return;
   const tbody = document.querySelector(SEL_TBODY);
   if (!tbody) return;
@@ -73,17 +71,7 @@ function attachSort(th) {
   th.style.userSelect = 'none';
   th.addEventListener('click', () => {
     if (!get(FEATURES.sortByArrival.key)) return;
-    sortByArrival(th, tbody);
+    sortRows(th, tbody);
   });
   th.setAttribute(SORT_BOUND_ATTR, '1');
-}
-
-export function renameHeader() {
-  const th = document.querySelector(SEL_FLIGHT_HEAD);
-  if (!th) return;
-  if (th.getAttribute(HEADER_RENAMED_ATTR) !== '1') {
-    setHeaderText(th, th.dataset.inexGeSort);
-    th.setAttribute(HEADER_RENAMED_ATTR, '1');
-  }
-  if (get(FEATURES.sortByArrival.key) && !hasPagination()) attachSort(th);
 }

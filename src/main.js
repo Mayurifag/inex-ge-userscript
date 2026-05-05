@@ -1,30 +1,46 @@
 import './styles.css';
-import { FEATURES, get } from './features.js';
-import { applyPerPage, fixPerPageOptions } from './perPage.js';
-import { applyStyles } from './styles.js';
-import { applyLastStatus, startObserver } from './lastStatus.js';
-import { renameHeader } from './sort.js';
-import { stripDescriptionPrice, guardDescriptionClick } from './description.js';
-import { expandTracking } from './tracking.js';
-import { translateStatuses } from './translate.js';
+import * as perPage from './perPage.js';
+import * as darkTheme from './darkTheme.js';
+import * as hideRecipient from './hideRecipient.js';
+import * as hideTakeout from './hideTakeout.js';
+import * as removeClutter from './removeClutter.js';
+import * as lastStatus from './lastStatus.js';
+import * as sort from './sort.js';
+import * as tracking from './tracking.js';
+import * as translate from './translate.js';
+import * as stripPrice from './stripPrice.js';
+import * as clickGuard from './clickGuard.js';
 import { registerMenu } from './menu.js';
 
-function refresh() {
-  translateStatuses();
-  applyLastStatus(renameHeader);
-  expandTracking();
-  stripDescriptionPrice();
+function init() {
+  perPage.apply();
+  darkTheme.apply();
+  hideRecipient.apply();
+  hideTakeout.apply();
+  removeClutter.apply();
+  clickGuard.apply();
 }
 
-if (get(FEATURES.perPage.key)) applyPerPage();
-applyStyles();
-guardDescriptionClick();
-registerMenu(refresh);
+function refresh() {
+  translate.apply();
+  lastStatus.apply();
+  sort.apply();
+  tracking.apply();
+  stripPrice.apply();
+}
+
+function applyAll() {
+  init();
+  refresh();
+}
+
+init();
+registerMenu(applyAll);
 
 function onReady() {
-  if (get(FEATURES.perPage.key)) fixPerPageOptions();
+  perPage.fixOptions();
   refresh();
-  startObserver(refresh);
+  lastStatus.startObserver(refresh);
 }
 
 if (document.readyState === 'loading') {

@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           inex.ge dark
 @namespace      github.com/Mayurifag/inex-ge-userscript
-@version        1.0.2
+@version        1.0.3
 @description    Dark theme for inex.ge — readable surfaces, recolored icons, no white panels.
 @author         Mayurifag
 @homepageURL    https://github.com/Mayurifag/inex-ge-userscript
@@ -25,6 +25,7 @@
     --inex-on-accent: #ffffff;
     --inex-status: #4dd17b;
     --inex-arrival: #ff8a8a;
+    --inex-overlay: rgba(28, 32, 48, 0.7);
   }
 
   html:root,
@@ -47,7 +48,6 @@
   html:root .calculator,
   html:root .itemInput,
   html:root .feedback,
-  html:root .modal,
   html:root .modal-content,
   html:root .card,
   html:root .resultsWrapper,
@@ -296,5 +296,51 @@
 
   html:root .inex-ge-arrival {
     color: var(--inex-arrival) !important;
+  }
+
+  html:root .modal-content {
+    border: 1px solid var(--inex-border) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  html:root .modal-backdrop.show {
+    opacity: 0.35 !important;
+  }
+
+  html:root .loading-overlay {
+    background: var(--inex-overlay) !important;
+  }
+
+  html:root #myModal .detailsWrapper {
+    background: var(--inex-surface) !important;
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root #myModal #valute,
+  html:root #myModal select:disabled,
+  html:root #myModal input:disabled {
+    background: var(--inex-surface-2) !important;
+    color: var(--inex-text-dim) !important;
+    -webkit-text-fill-color: var(--inex-text-dim) !important;
+    opacity: 1 !important;
+  }
+
+  html:root #myModal .dropzone,
+  html:root #my-awesome-dropzone {
+    background: var(--inex-surface-2) !important;
+    color: var(--inex-text-dim) !important;
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root #myModal .saveButton {
+    background: var(--inex-surface-2) !important;
+    color: var(--inex-text) !important;
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root #myModal .modal-content::-webkit-scrollbar-thumb,
+  html:root body::-webkit-scrollbar-thumb {
+    background: var(--inex-border) !important;
   }
 }

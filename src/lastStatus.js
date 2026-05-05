@@ -1,5 +1,13 @@
 import { FEATURES, get } from './features.js';
-import { ARRIVAL_DATA, CELL_REPLACED_ATTR, SEL_FLIGHT_TD, SEL_TBODY } from './constants.js';
+import {
+  ARRIVAL_DATA,
+  CELL_REPLACED_ATTR,
+  HEADER_RENAMED_ATTR,
+  HEADER_TEXT,
+  SEL_FLIGHT_HEAD,
+  SEL_FLIGHT_TD,
+  SEL_TBODY,
+} from './constants.js';
 
 const REFRESH_DEBOUNCE_MS = 150;
 const LOG = '[inex-ge]';
@@ -26,8 +34,7 @@ export function extractInfo(td) {
   if (!active) return null;
 
   const statusText = active.querySelector('p')?.textContent.trim() ?? '';
-  const statusDate = active.querySelector('p.date')?.textContent.trim() ?? '';
-  return { arrival, statusText, statusDate };
+  return { arrival, statusText };
 }
 
 function refreshSummary(td, aNode, sNode) {
@@ -87,7 +94,15 @@ function replaceCell(td) {
   td.setAttribute(CELL_REPLACED_ATTR, '1');
 }
 
-export function applyLastStatus(renameHeader) {
+function renameHeader() {
+  const th = document.querySelector(SEL_FLIGHT_HEAD);
+  if (!th) return;
+  if (th.getAttribute(HEADER_RENAMED_ATTR) === '1') return;
+  th.textContent = HEADER_TEXT;
+  th.setAttribute(HEADER_RENAMED_ATTR, '1');
+}
+
+export function apply() {
   if (!get(FEATURES.lastStatus.key)) return;
   renameHeader();
   document.querySelectorAll(SEL_FLIGHT_TD).forEach(replaceCell);
@@ -98,7 +113,7 @@ export function startObserver(onMutation) {
   if (!tbody) return null;
   const observer = new MutationObserver(() => {
     try {
-      if (get(FEATURES.lastStatus.key)) onMutation();
+      onMutation();
     } catch (e) {
       console.error(LOG, e);
     }

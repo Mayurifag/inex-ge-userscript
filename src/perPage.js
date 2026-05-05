@@ -1,8 +1,11 @@
+import { FEATURES, get } from './features.js';
+
 function isParcelsPage() {
   return /\/room\/parcels(?:\/|\?|$)/.test(window.location.pathname + window.location.search);
 }
 
-export function applyPerPage() {
+export function apply() {
+  if (!get(FEATURES.perPage.key)) return;
   if (!isParcelsPage()) return;
   const url = new URL(window.location.href);
   if (url.searchParams.has('perPage')) return;
@@ -10,7 +13,8 @@ export function applyPerPage() {
   window.location.replace(url.toString());
 }
 
-export function fixPerPageOptions() {
+export function fixOptions() {
+  if (!get(FEATURES.perPage.key)) return;
   const selects = document.querySelectorAll('select[name="perPage"]');
   if (!selects.length) return;
   const url = new URL(window.location.href);
