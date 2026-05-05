@@ -13,8 +13,7 @@
 - `src/lastStatus.js` — Flight cell replacement, MutationObserver loop.
 - `src/sort.js` — header rename + bucket-based arrival sort. Disabled when pagination links exist.
 - `src/translate.js` — Georgian→English status map.
-- `src/tracking.js` — replaces truncated `span.tracking` text with `data-original-title`.
-- `src/description.js` — strips price prefix from `td.description` via `data-original-title`.
+- `src/description.js` — strips price prefix from `td.description` (regex + tooltip attr fallback).
 - `src/menu.js` — Tampermonkey/Violentmonkey menu commands.
 - `vite.config.mjs` — userscript metadata block. `@match: https://inex.ge/*`.
 - `dist/inex-ge.user.js` — local build, gitignored on master. CI force-pushes to `release` branch on master push.

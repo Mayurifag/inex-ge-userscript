@@ -28,5 +28,6 @@ export function applyStyles() {
   root.toggle(FEATURE_CLASS.hideRecipient, get(FEATURES.hideRecipient.key));
   root.toggle(FEATURE_CLASS.hideTakeout, get(FEATURES.hideTakeout.key));
   root.toggle(FEATURE_CLASS.removeClutter, get(FEATURES.removeClutter.key));
+  root.toggle(FEATURE_CLASS.expandTracking, get(FEATURES.expandTracking.key));
   applyDarkTheme();
 }

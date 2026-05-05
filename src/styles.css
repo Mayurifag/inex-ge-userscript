@@ -11,6 +11,17 @@ html.inex-ge-remove-clutter table.table tbody tr > td:first-child p {
   display: none !important;
 }
 
+html.inex-ge-expand-tracking div[data-original-title]:has(> span.tracking) > span.tracking {
+  display: none !important;
+}
+
+html.inex-ge-expand-tracking div[data-original-title]:has(> span.tracking)::before {
+  content: attr(data-original-title);
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+}
+
 html.inex-ge-remove-clutter .parcelHead,
 html.inex-ge-remove-clutter .filtersWrapper,
 html.inex-ge-remove-clutter .searchWrapper,
@@ -18,12 +29,13 @@ html.inex-ge-remove-clutter .feedback-btn {
   display: none !important;
 }
 
-.inex-ge-status,
-.inex-ge-arrival {
+table.table tbody tr td.flightNumber .inex-ge-status,
+table.table tbody tr td.flightNumber .inex-ge-arrival {
   display: block;
   font-family: inherit;
-  font-size: 12px;
-  line-height: 1.3;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
   font-weight: normal;
 }
 
