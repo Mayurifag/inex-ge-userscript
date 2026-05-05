@@ -55,4 +55,5 @@ Every feature: toggleable via menu, default on, persisted in `GM_*Value`, takes 
 - Surgical changes; no drive-by refactors.
 - Match existing style.
 - Dark CSS uses variables (`--inex-bg`, `--inex-surface`, `--inex-text`, etc). Bump specificity (`.parcel-home .x .y`) when site uses `!important` + multi-class selectors.
+- All color values in property declarations MUST be `var(--inex-*)` — never hardcoded hex/rgb in property values. Hex literals are allowed only in `:root` variable definitions and in attribute selectors that match site-supplied values (e.g. `svg path[fill='#fff']`). If a needed color is missing, add a new variable to `:root` first, then reference it.
 - Bump `package.json` version on every shipped change.

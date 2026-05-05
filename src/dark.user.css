@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           inex.ge dark
 @namespace      github.com/Mayurifag/inex-ge-userscript
-@version        1.0.0
+@version        1.0.1
 @description    Dark theme for inex.ge — readable surfaces, recolored icons, no white panels.
 @author         Mayurifag
 @homepageURL    https://github.com/Mayurifag/inex-ge-userscript
@@ -20,6 +20,9 @@
     --inex-text: #f0f0f0;
     --inex-text-dim: #a8acb6;
     --inex-link: #ff6b6b;
+    --inex-link-text: #c4b5fd;
+    --inex-link-text-hover: #ddd6fe;
+    --inex-on-accent: #ffffff;
     --inex-status: #4dd17b;
     --inex-arrival: #ff8a8a;
   }
@@ -82,6 +85,13 @@
   html:root .inboxInfo,
   html:root .message,
   html:root .settingsWrapper,
+  html:root .authWrapper,
+  html:root .registration,
+  html:root .auth form,
+  html:root .partnersLogin,
+  html:root a.userButton,
+  html:root a.backButton,
+  html:root .info-popup,
   html:root table.table,
   html:root table.table thead,
   html:root table.table tbody,
@@ -129,7 +139,6 @@
   html:root span,
   html:root th,
   html:root td,
-  html:root a,
   html:root label,
   html:root li,
   html:root strong,
@@ -142,7 +151,6 @@
   html:root .text,
   html:root .description,
   html:root .item,
-  html:root .navItem,
   html:root .name,
   html:root .itemName,
   html:root .itemPrice,
@@ -157,12 +165,52 @@
   html:root main p,
   html:root main strong,
   html:root main b,
-  html:root main i {
+  html:root main i,
+  html:root main div,
+  html:root .header div,
+  html:root .footer div {
     color: var(--inex-text) !important;
   }
 
-  html:root a:hover {
-    color: var(--inex-link) !important;
+  html:root .inputText {
+    color: var(--inex-text-dim) !important;
+  }
+
+  html:root .eye {
+    filter: invert(1) !important;
+  }
+
+  html:root .authWrapper form .authContainer input,
+  html:root .registration form .authContainer input {
+    border-radius: 0 !important;
+  }
+
+  html:root input:-webkit-autofill,
+  html:root textarea:-webkit-autofill {
+    -webkit-text-fill-color: var(--inex-text) !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--inex-surface) inset !important;
+    caret-color: var(--inex-text) !important;
+  }
+
+  html:root a,
+  html:root .navBar,
+  html:root .navItem,
+  html:root .header .navBar,
+  html:root .header .navItem {
+    color: var(--inex-link-text) !important;
+  }
+
+  html:root a:hover,
+  html:root .navBar:hover,
+  html:root .navItem:hover,
+  html:root .header .navBar:hover,
+  html:root .header .navItem:hover {
+    color: var(--inex-link-text-hover) !important;
+  }
+
+  html:root .header a.loginButton,
+  html:root .header a.loginButton:hover {
+    color: var(--inex-on-accent) !important;
   }
 
   html:root input,
@@ -209,8 +257,7 @@
     fill: var(--inex-surface-2) !important;
   }
 
-  html:root .header img[src*='headerLogo'],
-  html:root .footer img[src*='headerLogo'] {
+  html:root img[src*='headerLogo'] {
     filter: invert(1) brightness(1.2);
   }
 
