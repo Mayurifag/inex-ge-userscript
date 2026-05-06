@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           inex.ge dark
 @namespace      github.com/Mayurifag/inex-ge-userscript
-@version        1.0.5
+@version        1.0.6
 @description    Dark theme for inex.ge — readable surfaces, recolored icons, no white panels.
 @author         Mayurifag
 @homepageURL    https://github.com/Mayurifag/inex-ge-userscript
@@ -228,6 +228,12 @@
     background: var(--inex-surface) !important;
     color: var(--inex-text) !important;
     border-color: var(--inex-border) !important;
+    color-scheme: dark;
+  }
+
+  html:root select option {
+    background: var(--inex-surface) !important;
+    color: var(--inex-text) !important;
   }
 
   html:root .toolTipWrapper::before {

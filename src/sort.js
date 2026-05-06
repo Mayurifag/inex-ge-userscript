@@ -3,6 +3,7 @@ import { ARRIVAL_DATA, HEADER_TEXT, SEL_FLIGHT_HEAD, SEL_TBODY } from './constan
 import { extractInfo } from './lastStatus.js';
 
 const SORT_BOUND_ATTR = 'data-inex-ge-sort-bound';
+const SORT_AUTO_ATTR = 'data-inex-ge-sort-auto';
 
 function parseDmy(s) {
   if (!s) return null;
@@ -22,15 +23,22 @@ function getRowArrival(tr) {
   return arrival;
 }
 
+function statusBucket(text) {
+  if (text.startsWith('Arrived, take')) return 0;
+  if (text.startsWith('Done')) return 1;
+  if (text.includes('customs procedures') || text.includes('terminal procedures')) return 2;
+  if (text === 'Sent') return 3;
+  return 4;
+}
+
 function bucketKey(tr) {
-  const span = tr.querySelector('td.status span');
-  const cls = span?.className ?? '';
-  const arrival = parseDmy(getRowArrival(tr));
-  if (cls.includes('takeout')) return [3, 0];
-  if (cls.includes('parcel-outline-success')) return [0, 0];
-  if (arrival != null) return [1, arrival];
-  if (cls.includes('parcel-outline-warning')) return [2, 0];
-  return [3, 0];
+  const text = tr.querySelector('td.flightNumber .inex-ge-status')?.textContent ?? '';
+  const b = statusBucket(text);
+  if (b === 3) {
+    const arrival = parseDmy(getRowArrival(tr));
+    return [b, arrival ?? Number.MAX_SAFE_INTEGER];
+  }
+  return [b, 0];
 }
 
 function setHeaderArrow(th, dir) {
@@ -64,14 +72,19 @@ export function apply() {
   if (hasPagination()) return;
   const th = document.querySelector(SEL_FLIGHT_HEAD);
   if (!th) return;
-  if (th.getAttribute(SORT_BOUND_ATTR) === '1') return;
   const tbody = document.querySelector(SEL_TBODY);
   if (!tbody) return;
-  th.style.cursor = 'pointer';
-  th.style.userSelect = 'none';
-  th.addEventListener('click', () => {
-    if (!get(FEATURES.sortByArrival.key)) return;
+  if (th.getAttribute(SORT_BOUND_ATTR) !== '1') {
+    th.style.cursor = 'pointer';
+    th.style.userSelect = 'none';
+    th.addEventListener('click', () => {
+      if (!get(FEATURES.sortByArrival.key)) return;
+      sortRows(th, tbody);
+    });
+    th.setAttribute(SORT_BOUND_ATTR, '1');
+  }
+  if (tbody.getAttribute(SORT_AUTO_ATTR) !== '1') {
     sortRows(th, tbody);
-  });
-  th.setAttribute(SORT_BOUND_ATTR, '1');
+    tbody.setAttribute(SORT_AUTO_ATTR, '1');
+  }
 }

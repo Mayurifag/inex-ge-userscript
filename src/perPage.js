@@ -9,7 +9,7 @@ export function apply() {
   if (!isParcelsPage()) return;
   const url = new URL(window.location.href);
   if (url.searchParams.has('perPage')) return;
-  url.searchParams.set('perPage', '20');
+  url.searchParams.set('perPage', '40');
   window.location.replace(url.toString());
 }
 

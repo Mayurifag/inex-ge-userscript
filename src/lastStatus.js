@@ -12,6 +12,14 @@ const REFRESH_DEBOUNCE_MS = 150;
 const OBSERVER_DEBOUNCE_MS = 50;
 const LOG = '[inex-ge]';
 
+const ARRIVED_BADGE_CLASS = 'parcel-outline-success';
+const ARRIVED_OVERRIDE_TEXT = 'Arrived, take from branch';
+
+function isArrivedRow(td) {
+  const tr = td.closest('tr');
+  return !!tr?.querySelector(`td.status span.${ARRIVED_BADGE_CLASS}`);
+}
+
 export function extractInfo(td) {
   const tip = td.querySelector('div.toolTip');
   if (!tip) return null;
@@ -34,6 +42,7 @@ export function extractInfo(td) {
   if (!active) return null;
 
   const statusText = active.querySelector('p')?.textContent.trim() ?? '';
+  if (isArrivedRow(td)) return { arrival: '', statusText: ARRIVED_OVERRIDE_TEXT };
   return { arrival, statusText };
 }
 
