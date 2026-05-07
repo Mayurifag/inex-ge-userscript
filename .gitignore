@@ -8,3 +8,5 @@ dist/
 *.png
 *.jpg
 
+browser-data/
+.sisyphus/
