@@ -2,12 +2,12 @@ import { FEATURES, get } from './features.js';
 
 const STATUS_MAP = {
   გამოგზავნილია: 'Sent',
-  'ჩამოსულია, მიმდინარეობს სატერმინალო პროცედურები': 'Arrived, terminal procedures in progress',
-  'ჩამოსულია, მიმდინარეობს საბაჟო პროცედურები': 'Arrived, customs procedures in progress',
+  'ჩამოსულია, მიმდინარეობს სატერმინალო პროცედურები': 'Terminal processing',
+  'ჩამოსულია, მიმდინარეობს საბაჟო პროცედურები': 'Customs clearance',
   'გამანაწილებელ ჰაბშია, მიმდინარეობს დახარისხება. დახარისხებისთვის საჭიროა 0-დან 2 დღემდე':
-    'At distribution hub, sorting in progress (0–2 days)',
+    'At hub, sorting (0–2 days)',
   'დასრულებულია, მიმდინარეობს ფილიალებში განაწილება. განაწილებისთვის საჭიროა 0-დან 3 დღემდე':
-    'Done, distributing to branches (0–3 days)',
+    'Distributing to branch (0–3 days)',
 };
 
 const MENU_RE = /^\s*შიდა\s+გზავნილები\s*(\([^)]*\))?\s*$/;

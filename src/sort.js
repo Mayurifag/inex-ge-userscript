@@ -1,44 +1,24 @@
 import { FEATURES, get } from './features.js';
-import { ARRIVAL_DATA, HEADER_TEXT, SEL_FLIGHT_HEAD, SEL_TBODY } from './constants.js';
-import { extractInfo } from './lastStatus.js';
+import { HEADER_TEXT, SEL_FLIGHT_HEAD, SEL_TBODY } from './constants.js';
 
 const SORT_BOUND_ATTR = 'data-inex-ge-sort-bound';
 const SORT_AUTO_ATTR = 'data-inex-ge-sort-auto';
+const EVENT_COUNT_ATTR = 'inexGeEventCount';
 
-function parseDmy(s) {
-  if (!s) return null;
-  const m = s.match(/(\d{1,2})\.(\d{1,2})\.(\d{4})/);
-  if (!m) return null;
-  return Date.UTC(+m[3], +m[2] - 1, +m[1]);
-}
-
-function getRowArrival(tr) {
-  const cached = tr.dataset[ARRIVAL_DATA];
-  if (cached !== undefined) return cached;
+function getEventCount(tr) {
+  const cached = tr.dataset[EVENT_COUNT_ATTR];
+  if (cached !== undefined) return Number(cached);
   const td = tr.querySelector('td.flightNumber');
-  if (!td) return '';
-  const info = extractInfo(td);
-  const arrival = info ? info.arrival : '';
-  tr.dataset[ARRIVAL_DATA] = arrival;
-  return arrival;
-}
-
-function statusBucket(text) {
-  if (text.startsWith('Arrived, take')) return 0;
-  if (text.startsWith('Done')) return 1;
-  if (text.includes('customs procedures') || text.includes('terminal procedures')) return 2;
-  if (text === 'Sent') return 3;
-  return 4;
+  if (!td) return 0;
+  const tip = td.querySelector('div.toolTip');
+  if (!tip) return 0;
+  const count = tip.querySelectorAll('ul li').length;
+  tr.dataset[EVENT_COUNT_ATTR] = count;
+  return count;
 }
 
 function bucketKey(tr) {
-  const text = tr.querySelector('td.flightNumber .inex-ge-status')?.textContent ?? '';
-  const b = statusBucket(text);
-  if (b === 3) {
-    const arrival = parseDmy(getRowArrival(tr));
-    return [b, arrival ?? Number.MAX_SAFE_INTEGER];
-  }
-  return [b, 0];
+  return [-getEventCount(tr), 0];
 }
 
 function setHeaderArrow(th, dir) {
