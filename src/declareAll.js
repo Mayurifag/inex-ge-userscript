@@ -34,16 +34,9 @@ function selectCurrency(currency) {
   select.dispatchEvent(new Event('change', { bubbles: true }));
 }
 
-function fixAmountPlaceholder() {
-  // Helium shows this as "Yottawatts;" for no obvious reason.
-  const field = document.querySelector('#price');
-  if (field) field.setAttribute('placeholder', 'Amount paid');
-}
-
 export function apply() {
   const enabled = get(FEATURES.declareAll.key) && isDeclareAllPage();
   document.documentElement.classList.toggle(FEATURE_CLASS.declareAll, enabled);
   if (!enabled) return;
   selectCurrency(CURRENCY_BY_FLAG[flagCode()] ?? 'USD');
-  fixAmountPlaceholder();
 }
