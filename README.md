@@ -14,6 +14,7 @@ Userscript that makes the [inex.ge](https://inex.ge) parcel tracking page faster
 - **Sort by arrival date** — click the "Arrival" header. Soonest action first: arrived parcels on top, then by ETA, sent-without-ETA next, takeout/done at the bottom. Disabled when there are multiple pages so you don't get a half-sorted list.
 - **Expanded tracking numbers** — no more `...XXXXX` truncation.
 - **Cleaner description** — drops the `12.34 CNY -` price prefix in front of every item name.
+- **Auto-selects declaration currency** by warehouse country.
 - **Removes site clutter** — page title banner, status filter buttons, top search bar, send-date in the tracking column.
 - **Hides the Recipient column** — you already know it's you.
 - **Hides Takeout parcels** from the list (still visible in the dedicated Takeout view).

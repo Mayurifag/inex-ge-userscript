@@ -45,6 +45,7 @@ auto-publishes to `release` branch.
 - Node 24+ required (`"engines": { "node": ">=24" }`)
 - ESM only (`"type": "module"`)
 - No comments unless WHY non-obvious
+- Update `README.md` when adding or changing user-facing features
 - Dark CSS: only `--inex-*` vars in property values; add new var to `:root` first
 - Bump `package.json` version on every shipped change (even CSS-only). CSS changes should bump patch version, too.
   Single branch = 1 version bump, dont bump several versions.
