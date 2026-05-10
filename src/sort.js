@@ -1,33 +1,40 @@
 import { FEATURES, get } from './features.js';
-import { ARRIVAL_DATA, HEADER_TEXT, SEL_FLIGHT_HEAD, SEL_TBODY } from './constants.js';
+import {
+  ARRIVAL_DATA,
+  ARRIVED_BADGE_CLASS,
+  ETA_DATA,
+  EVENT_COUNT_DATA,
+  HEADER_TEXT,
+  LAST_UPDATE_DATA,
+  SEL_FLIGHT_HEAD,
+  SEL_TBODY,
+} from './constants.js';
 import { daysUntil, parseDmy } from './date.js';
 import { extractInfo } from './lastStatus.js';
+import { compareSortKeys, getSortKey } from './sortKey.js';
 
 const SORT_BOUND_ATTR = 'data-inex-ge-sort-bound';
 const SORT_AUTO_ATTR = 'data-inex-ge-sort-auto';
-const EVENT_COUNT_ATTR = 'inexGeEventCount';
-const ETA_ATTR = 'inexGeEta';
-const LAST_UPDATE_ATTR = 'inexGeLastUpdate';
 
 function getEventCount(tr) {
-  const cached = tr.dataset[EVENT_COUNT_ATTR];
+  const cached = tr.dataset[EVENT_COUNT_DATA];
   if (cached !== undefined) return Number(cached);
   const td = tr.querySelector('td.flightNumber');
   if (!td) return 0;
   const tip = td.querySelector('div.toolTip');
   if (!tip) return 0;
   const count = tip.querySelectorAll('ul li').length;
-  tr.dataset[EVENT_COUNT_ATTR] = count;
+  tr.dataset[EVENT_COUNT_DATA] = count;
   return count;
 }
 
 function getEta(tr) {
-  const cached = tr.dataset[ETA_ATTR];
+  const cached = tr.dataset[ETA_DATA];
   if (cached !== undefined) return Number(cached);
   const td = tr.querySelector('td.flightNumber');
   const arrival = tr.dataset[ARRIVAL_DATA] || (td ? extractInfo(td)?.arrival : '');
   const eta = daysUntil(arrival) ?? Infinity;
-  tr.dataset[ETA_ATTR] = eta;
+  tr.dataset[ETA_DATA] = eta;
   return eta;
 }
 
@@ -43,17 +50,31 @@ function getTooltipDate(td) {
 }
 
 function getLastUpdate(tr) {
-  const cached = tr.dataset[LAST_UPDATE_ATTR];
+  const cached = tr.dataset[LAST_UPDATE_DATA];
   if (cached !== undefined) return Number(cached);
   const td = tr.querySelector('td.flightNumber');
   const timestamp = td ? parseDmy(getTooltipDate(td)) : null;
   const lastUpdate = timestamp ?? -Infinity;
-  tr.dataset[LAST_UPDATE_ATTR] = lastUpdate;
+  tr.dataset[LAST_UPDATE_DATA] = lastUpdate;
   return lastUpdate;
 }
 
+function isArrivedRow(tr) {
+  return !!tr.querySelector(`td.status span.${ARRIVED_BADGE_CLASS}`);
+}
+
+function isDoneRow(tr) {
+  return !!tr.querySelector('td.status .takeout');
+}
+
 function bucketKey(tr) {
-  return [-getEventCount(tr), getEta(tr), -getLastUpdate(tr)];
+  return getSortKey({
+    isArrived: isArrivedRow(tr),
+    isDone: isDoneRow(tr),
+    eventCount: getEventCount(tr),
+    eta: getEta(tr),
+    lastUpdate: getLastUpdate(tr),
+  });
 }
 
 function isParcelsPage() {
@@ -74,10 +95,7 @@ function sortRows(th, tbody) {
   rows.sort((a, b) => {
     const ak = keys.get(a);
     const bk = keys.get(b);
-    for (let i = 0; i < ak.length; i += 1) {
-      if (ak[i] !== bk[i]) return sign * (ak[i] - bk[i]);
-    }
-    return 0;
+    return sign * compareSortKeys(ak, bk);
   });
   for (const r of rows) tbody.appendChild(r);
   th.dataset.inexGeSort = dir;

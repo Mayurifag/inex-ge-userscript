@@ -7,7 +7,7 @@ Userscript that makes the [inex.ge](https://inex.ge) parcel tracking page faster
 ## What it does
 
 - **Dark theme** across the whole site — readable surfaces, no white panels, no black icons.
-- **Bigger parcel list by default** — forces `?perPage=20` on first visit; never overrides if you change it.
+- **Bigger parcel list by default** — forces `?perPage=40` on first visit; never overrides if you change it.
 - **Replaces the Flight Number column** with the latest status in green and estimated arrival date in red. Original tooltip preserved — hover anywhere on the cell to see full history.
 - **Translates Georgian statuses** to English (e.g. "გამოგზავნილია" → "Sent").
 - **Redirects `/ka/...` URLs to `/en/...`** — Georgian pages bounce to the English version, query and hash preserved.

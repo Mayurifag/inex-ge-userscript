@@ -2,6 +2,10 @@ export const ARRIVAL_DATA = 'inexGeArrival';
 export const HEADER_TEXT = 'Arrival';
 export const CELL_REPLACED_ATTR = 'data-inex-ge-replaced';
 export const HEADER_RENAMED_ATTR = 'data-inex-ge-header-renamed';
+export const EVENT_COUNT_DATA = 'inexGeEventCount';
+export const ETA_DATA = 'inexGeEta';
+export const LAST_UPDATE_DATA = 'inexGeLastUpdate';
+export const ARRIVED_BADGE_CLASS = 'parcel-outline-success';
 
 export const SEL_TBODY = 'table.table tbody';
 export const SEL_FLIGHT_TD = 'table.table tbody td.flightNumber';

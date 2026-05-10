@@ -1,6 +1,6 @@
 {
   "name": "inex-ge-userscript",
-  "version": "0.4.12",
+  "version": "0.4.14",
   "private": true,
   "description": "Violentmonkey userscript for inex.ge parcels page.",
   "type": "module",
@@ -12,8 +12,10 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint .",
+    "test": "node --test scripts/*.test.mjs",
     "stylelint": "stylelint \"src/**/*.css\"",
     "stylelint:fix": "stylelint \"src/**/*.css\" --fix",
+    "smoke:build": "node scripts/check-build.mjs",
     "format": "prettier --check ."
   },
   "devDependencies": {

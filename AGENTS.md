@@ -28,7 +28,7 @@ auto-publishes to `release` branch.
 | Fix DOM selector | `src/constants.js`             | All selectors in one place                |
 | GM API issue     | `src/gm.js`                    | Shim scans `document.__monkeyWindow-*`    |
 | Dark theme color | `src/dark.user.css`            | Dual-distribution: Stylus + GM_addStyle   |
-| Build output     | `dist/inex-ge.user.js`         | Unminified for readability                |
+| Build output     | `dist/inex-ge.user.js`         | Minified CI-generated userscript          |
 
 ## CODE MAP
 
@@ -76,7 +76,7 @@ agent-browser state save inex-auth.json
 
 1. `npm run dev` must stay running for the Tampermonkey dev userscript to work; install from
    `http://127.0.0.1:<port>/__vite-plugin-monkey.install.user.js`
-2. `agent-browser open 'https://inex.ge/en/room/parcels?perPage=20'`
+2. `agent-browser open 'https://inex.ge/en/room/parcels?perPage=40'`
 3. `agent-browser eval` to inspect DOM
 4. For UI fixes, open the fixed page in Chrome and show/verify the result before stopping.
 5. Stop `npm run dev` before ending the task.

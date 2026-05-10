@@ -71,7 +71,7 @@ Use `mcp__playwright-chrome__*` tools throughout. Do **not** open a fresh isolat
    feat.darkTheme, feat.translateStatus
    ```
 3. **BEFORE screenshot** (`docs/before.png`):
-   - Navigate to `https://inex.ge/en/room/parcels` (no `?perPage=20` — let the site default to 8 rows).
+   - Navigate to `https://inex.ge/en/room/parcels` (no `?perPage=40` — let the site default to 8 rows).
    - Set every flag above to `false` via `mk.GM_setValue(key, false)`.
    - Reload (`browser_navigate` to the same URL) so the userscript re-runs and bails on each feature.
    - Verify `document.documentElement.className === ''` and the Flight column shows raw flight numbers (e.g. `TK-GE-…`, `CN-GE-…`). If userscript effects persist, abort — do not ship a broken BEFORE.
@@ -80,8 +80,8 @@ Use `mcp__playwright-chrome__*` tools throughout. Do **not** open a fresh isolat
    - `browser_take_screenshot` with `filename: "docs/before.png"`, `type: "png"`, `fullPage: false`.
 4. **AFTER screenshot** (`docs/after.png`):
    - Set every flag back to `true` via `mk.GM_setValue(key, true)`.
-   - Navigate to `https://inex.ge/en/room/parcels?perPage=20`.
-   - Verify `document.documentElement.className` contains `inex-ge-dark` and `tbody tr` count is 20.
+   - Navigate to `https://inex.ge/en/room/parcels?perPage=40`.
+   - Verify `document.documentElement.className` contains `inex-ge-dark` and `tbody tr` count is 40.
    - Inject the blur CSS above.
    - Inject the label badge (above) with text `"After"`.
    - `browser_take_screenshot` with `filename: "docs/after.png"`, `type: "png"`, `fullPage: false`.

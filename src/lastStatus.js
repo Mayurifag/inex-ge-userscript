@@ -1,19 +1,21 @@
 import { FEATURES, get } from './features.js';
 import {
   ARRIVAL_DATA,
+  ARRIVED_BADGE_CLASS,
   CELL_REPLACED_ATTR,
+  ETA_DATA,
+  EVENT_COUNT_DATA,
   HEADER_RENAMED_ATTR,
   HEADER_TEXT,
+  LAST_UPDATE_DATA,
   SEL_FLIGHT_HEAD,
   SEL_FLIGHT_TD,
 } from './constants.js';
 import { daysAgo, daysUntil } from './date.js';
 
-const REFRESH_DEBOUNCE_MS = 150;
 const OBSERVER_DEBOUNCE_MS = 50;
 const LOG = '[inex-ge]';
 
-const ARRIVED_BADGE_CLASS = 'parcel-outline-success';
 const ARRIVED_OVERRIDE_TEXT = 'Arrived, take from branch';
 
 function isArrivedRow(td) {
@@ -72,64 +74,63 @@ function getArrivalSummary(arrival) {
   return arrival;
 }
 
-function refreshSummary(td, aNode, sNode) {
-  const info = extractInfo(td);
-  if (!info) return;
+function setRowData(td, arrival) {
+  const tr = td.closest('tr');
+  if (tr) {
+    if (tr.dataset[ARRIVAL_DATA] !== arrival) tr.dataset[ARRIVAL_DATA] = arrival;
+    if (tr.dataset[EVENT_COUNT_DATA] !== undefined) delete tr.dataset[EVENT_COUNT_DATA];
+    if (tr.dataset[ETA_DATA] !== undefined) delete tr.dataset[ETA_DATA];
+    if (tr.dataset[LAST_UPDATE_DATA] !== undefined) delete tr.dataset[LAST_UPDATE_DATA];
+  }
+}
 
+function syncReplacedCell(td, info) {
   const sText = getStatusSummary(info);
-  if (sNode.nodeValue !== sText) sNode.nodeValue = sText;
+  const s = td.querySelector('.inex-ge-status');
+  if (s && s.textContent !== sText) s.textContent = sText;
 
-  if (aNode && info.arrival) {
-    const aText = getArrivalSummary(info.arrival);
-    if (aNode.nodeValue !== aText) aNode.nodeValue = aText;
+  const aText = info.arrival ? getArrivalSummary(info.arrival) : '';
+  const a = td.querySelector('.inex-ge-arrival');
+  if (a && aText && a.textContent !== aText) a.textContent = aText;
+  if (a && !aText) a.remove();
+  if (!a && aText) {
+    const next = document.createElement('span');
+    next.className = 'inex-ge-arrival';
+    next.textContent = aText;
+    s?.after(next);
   }
 
-  const tr = td.closest('tr');
-  if (tr) tr.dataset[ARRIVAL_DATA] = info.arrival;
+  setRowData(td, info.arrival);
 }
 
 function replaceCell(td) {
-  if (td.getAttribute(CELL_REPLACED_ATTR)) return;
   const tip = td.querySelector('div.toolTip');
   if (!tip) return;
   const info = extractInfo(td);
   if (!info) return;
+  if (td.getAttribute(CELL_REPLACED_ATTR)) {
+    syncReplacedCell(td, info);
+    return;
+  }
 
   const sText = getStatusSummary(info);
 
   const s = document.createElement('span');
   s.className = 'inex-ge-status';
-  const sNode = document.createTextNode(sText);
-  s.appendChild(sNode);
+  s.textContent = sText;
 
   let a = null;
-  let aNode = null;
   if (info.arrival) {
     a = document.createElement('span');
     a.className = 'inex-ge-arrival';
     const aText = getArrivalSummary(info.arrival);
-    aNode = document.createTextNode(aText);
-    a.appendChild(aNode);
+    a.textContent = aText;
   }
 
   const children = a ? [s, a, tip] : [s, tip];
   td.replaceChildren(...children);
 
-  const tr = td.closest('tr');
-  if (tr) tr.dataset[ARRIVAL_DATA] = info.arrival;
-
-  let timer = null;
-  const obs = new MutationObserver(() => {
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      try {
-        refreshSummary(td, aNode, sNode);
-      } catch (e) {
-        console.error(LOG, e);
-      }
-    }, REFRESH_DEBOUNCE_MS);
-  });
-  obs.observe(tip, { characterData: true, subtree: true, childList: true });
+  setRowData(td, info.arrival);
 
   td.setAttribute(CELL_REPLACED_ATTR, '1');
 }
@@ -171,8 +172,9 @@ export function startObserver(onMutation) {
   const bind = (tbody) => {
     if (tbody === boundTbody) return;
     inner.disconnect();
-    inner.observe(tbody, { childList: true });
     inner.observe(tbody, {
+      childList: true,
+      characterData: true,
       subtree: true,
       attributes: true,
       attributeFilter: ['data-original-title'],
