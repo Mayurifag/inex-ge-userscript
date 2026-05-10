@@ -4,10 +4,7 @@ import darkCss from './dark.user.css?raw';
 
 const STYLE_ID = 'inex-ge-dark-style';
 
-const rules = darkCss
-  .replace(/\/\*\s*==UserStyle==[\s\S]*?==\/UserStyle==\s*\*\//, '')
-  .replace(/@-moz-document[^{]+\{/, '')
-  .replace(/\}\s*$/, '');
+const rules = darkCss;
 
 let el = null;
 

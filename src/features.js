@@ -13,7 +13,7 @@ export const FEATURES = {
   },
   sortByArrival: {
     key: 'feat.sortByArrival',
-    label: 'Sort by event count (most first)',
+    label: 'Sort arrivals by progress and ETA',
   },
   expandTracking: {
     key: 'feat.expandTracking',

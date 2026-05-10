@@ -1,4 +1,4 @@
-.PHONY: install dev build lint format ci clean readme-screenshot
+.PHONY: install dev build lint stylelint format ci clean readme-screenshot
 
 install:
 	npm ci
@@ -12,10 +12,13 @@ build:
 lint:
 	npx eslint .
 
+stylelint:
+	npm run stylelint
+
 format:
 	npx prettier --check .
 
-ci: lint format build
+ci: lint stylelint format build
 
 clean:
 	rm -rf node_modules dist
