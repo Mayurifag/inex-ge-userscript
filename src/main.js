@@ -11,6 +11,7 @@ import * as tracking from './tracking.js';
 import * as translate from './translate.js';
 import * as stripPrice from './stripPrice.js';
 import * as clickGuard from './clickGuard.js';
+import * as declareAll from './declareAll.js';
 import { registerMenu } from './menu.js';
 
 langRedirect.apply();
@@ -22,9 +23,11 @@ function init() {
   hideTakeout.apply();
   removeClutter.apply();
   clickGuard.apply();
+  declareAll.apply();
 }
 
 function refresh() {
+  declareAll.apply();
   translate.apply();
   lastStatus.apply();
   sort.apply();

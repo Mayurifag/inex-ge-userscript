@@ -27,6 +27,7 @@
     --inex-status: #4dd17b;
     --inex-arrival: #ff8a8a;
     --inex-overlay: rgb(28 32 48 / 70%);
+    --inex-icon-filter: invert(1) brightness(1.2);
   }
 
   html:root,
@@ -416,6 +417,10 @@
   html:root .declarInfo .formWrapper,
   html:root .declarInfo .textWrapper {
     border-color: var(--inex-border) !important;
+  }
+
+  html:root .parcelsWrapper.declare-all .textWrapper .toolTip {
+    filter: var(--inex-icon-filter) !important;
   }
 
   html:root .declareParcel .parcelTitle {

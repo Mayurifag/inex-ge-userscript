@@ -1,6 +1,6 @@
 {
   "name": "inex-ge-userscript",
-  "version": "0.4.14",
+  "version": "0.4.15",
   "private": true,
   "description": "Violentmonkey userscript for inex.ge parcels page.",
   "type": "module",

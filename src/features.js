@@ -35,6 +35,10 @@ export const FEATURES = {
     key: 'feat.clickGuard',
     label: 'Suppress modal click after text-drag',
   },
+  declareAll: {
+    key: 'feat.declareAll',
+    label: 'Auto-select declaration currency by warehouse',
+  },
 };
 
 export function get(key) {

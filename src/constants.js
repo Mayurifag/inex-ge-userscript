@@ -16,4 +16,5 @@ export const FEATURE_CLASS = {
   hideTakeout: 'inex-ge-hide-takeout',
   removeClutter: 'inex-ge-remove-clutter',
   expandTracking: 'inex-ge-expand-tracking',
+  declareAll: 'inex-ge-declare-all',
 };
