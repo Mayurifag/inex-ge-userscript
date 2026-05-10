@@ -12,6 +12,10 @@ const STATUS_MAP = {
 
 const MENU_RE = /^\s*შიდა\s+გზავნილები\s*(\([^)]*\))?\s*$/;
 
+const TEXT_MAP = {
+  'საბანკო გადარიცხვა': 'Bank Transfer',
+};
+
 export function apply() {
   if (!get(FEATURES.translateStatus.key)) return;
   if (location.pathname.startsWith('/ka/')) return;
@@ -24,5 +28,10 @@ export function apply() {
   for (const p of document.querySelectorAll('.leftBarWrapper a.item > p')) {
     const m = p.textContent.match(MENU_RE);
     if (m) p.textContent = p.textContent.replace(/შიდა\s+გზავნილები/, 'Local Parcels');
+  }
+  for (const el of document.querySelectorAll('#from-bank-transfer-tab')) {
+    const tx = el.textContent.trim();
+    const en = TEXT_MAP[tx];
+    if (en && en !== tx) el.textContent = en;
   }
 }

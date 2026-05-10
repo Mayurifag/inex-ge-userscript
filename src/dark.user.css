@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           inex.ge dark
 @namespace      github.com/Mayurifag/inex-ge-userscript
-@version        1.0.6
+@version        1.0.8
 @description    Dark theme for inex.ge — readable surfaces, recolored icons, no white panels.
 @author         Mayurifag
 @homepageURL    https://github.com/Mayurifag/inex-ge-userscript
@@ -11,6 +11,7 @@
 @preprocessor   default
 ==/UserStyle== */
 
+/* stylelint-disable-next-line at-rule-no-vendor-prefix */
 @-moz-document domain("inex.ge") {
   html:root {
     --inex-bg: #13161e;
@@ -22,10 +23,10 @@
     --inex-link: #ff6b6b;
     --inex-link-text: #c4b5fd;
     --inex-link-text-hover: #ddd6fe;
-    --inex-on-accent: #ffffff;
+    --inex-on-accent: #fff;
     --inex-status: #4dd17b;
     --inex-arrival: #ff8a8a;
-    --inex-overlay: rgba(28, 32, 48, 0.7);
+    --inex-overlay: rgb(28 32 48 / 70%);
   }
 
   html:root,
@@ -95,6 +96,20 @@
   html:root a.userButton,
   html:root a.backButton,
   html:root .info-popup,
+  html:root .checkoutWrapper,
+  html:root .checkoutWrapper .videoButton,
+  html:root .checkoutWrapper .item,
+  html:root .checkoutWrapper .group,
+  html:root .checkoutWrapper .beforeSort,
+  html:root .checkoutWrapper .checkoutForm,
+  html:root .checkoutWrapper .dragWrapper2,
+  html:root .checkoutWrapper .paymentMethods .items,
+  html:root .declarInfo,
+  html:root .declareParcel,
+  html:root .declareParcel .parcelTitle,
+  html:root .declareParcel .parcels,
+  html:root .declareParcel .item,
+  html:root .declarInfo .list-x,
   html:root table.table,
   html:root table.table thead,
   html:root table.table tbody,
@@ -191,7 +206,7 @@
   html:root input:-webkit-autofill,
   html:root textarea:-webkit-autofill {
     -webkit-text-fill-color: var(--inex-text) !important;
-    -webkit-box-shadow: 0 0 0 1000px var(--inex-surface) inset !important;
+    box-shadow: 0 0 0 1000px var(--inex-surface) inset !important;
     caret-color: var(--inex-text) !important;
   }
 
@@ -307,7 +322,7 @@
   html:root .modal-content {
     border: 1px solid var(--inex-border) !important;
     border-radius: 8px !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 50%) !important;
   }
 
   html:root .modal-backdrop.show {
@@ -316,6 +331,113 @@
 
   html:root .loading-overlay {
     background: var(--inex-overlay) !important;
+  }
+
+  html:root .checkoutWrapper.dot,
+  html:root .checkoutWrapper .item,
+  html:root .checkoutWrapper .videoButton,
+  html:root .checkoutWrapper .group,
+  html:root .checkoutWrapper .beforeSort,
+  html:root .checkoutWrapper .totalPrice .price,
+  html:root .checkoutWrapper .checkoutForm,
+  html:root .checkoutWrapper .dragWrapper2,
+  html:root .checkoutWrapper .paymentMethods .items,
+  html:root .checkoutWrapper .checkOut.disabled {
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root .checkoutWrapper .icon,
+  html:root .checkoutWrapper .totalPrice .price,
+  html:root .checkoutWrapper .paymentMethods .items,
+  html:root .checkoutWrapper .checkOut.disabled {
+    background: var(--inex-surface-2) !important;
+  }
+
+  html:root .checkoutWrapper .group,
+  html:root .checkoutWrapper .beforeSort,
+  html:root .checkoutWrapper .checkoutForm,
+  html:root .checkoutWrapper .dragWrapper2 {
+    background: var(--inex-surface) !important;
+  }
+
+  html:root .checkoutWrapper .head .title,
+  html:root .checkoutWrapper .checkOutTitle h1,
+  html:root .checkoutWrapper .beforeSort,
+  html:root .checkoutWrapper .checkoutForm .name,
+  html:root .checkoutWrapper .paymentMethods h1 {
+    color: var(--inex-text) !important;
+  }
+
+  html:root .checkoutWrapper .videoButton {
+    color: var(--inex-text-dim) !important;
+  }
+
+  html:root .checkoutWrapper .back {
+    background: var(--inex-surface-2) !important;
+    color: var(--inex-text) !important;
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root .checkoutWrapper .back:hover {
+    background: var(--inex-surface) !important;
+    color: var(--inex-link-text-hover) !important;
+    border-color: var(--inex-link) !important;
+  }
+
+  html:root .checkoutWrapper .checkOut {
+    border-color: var(--inex-link) !important;
+  }
+
+  html:root .checkoutWrapper .checkOut.disabled {
+    color: var(--inex-text-dim) !important;
+    opacity: 1 !important;
+  }
+
+  html:root .checkoutWrapper .paymentMethods .items {
+    color: var(--inex-link-text) !important;
+  }
+
+  html:root .checkoutWrapper .paymentMethods .items:hover,
+  html:root .checkoutWrapper .paymentMethods .items[aria-selected='true'],
+  html:root .checkoutWrapper .paymentMethods .items.active {
+    background: var(--inex-surface) !important;
+    color: var(--inex-link-text-hover) !important;
+    border-color: var(--inex-link) !important;
+  }
+
+  html:root .declareParcel,
+  html:root .declareParcel .parcelTitle,
+  html:root .declareParcel .item,
+  html:root .declarInfo,
+  html:root .declarInfo .list-x,
+  html:root .declarInfo .list-x li,
+  html:root .declarInfo .infoWrapper,
+  html:root .declarInfo .title,
+  html:root .declarInfo .formWrapper,
+  html:root .declarInfo .textWrapper {
+    border-color: var(--inex-border) !important;
+  }
+
+  html:root .declareParcel .parcelTitle {
+    color: var(--inex-text-dim) !important;
+  }
+
+  html:root .checkoutWrapper.last #sortable0 .item {
+    display: grid !important;
+    grid-template-columns: minmax(180px, 1fr) minmax(96px, 0.65fr) minmax(260px, 1.35fr) max-content;
+    column-gap: 24px;
+    align-items: center !important;
+    justify-content: stretch !important;
+  }
+
+  html:root .checkoutWrapper.last #sortable0 .itemChild,
+  html:root .checkoutWrapper.last #sortable0 .price {
+    width: auto !important;
+  }
+
+  html:root .checkoutWrapper.last #sortable0 .price {
+    justify-self: end !important;
+    white-space: nowrap;
   }
 
   html:root #myModal .detailsWrapper {

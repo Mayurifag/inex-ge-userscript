@@ -6,8 +6,25 @@ const ICON =
 
 const REPO_RAW = 'https://raw.githubusercontent.com/Mayurifag/inex-ge-userscript/release';
 
+function stripDarkCss(css) {
+  return css
+    .replace(/\/\*\s*==UserStyle==[\s\S]*?==\/UserStyle==\s*\*\//, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/@-moz-document[^{]+\{/, '')
+    .replace(/\}\s*$/, '')
+    .trim();
+}
+
 export default defineConfig({
   plugins: [
+    {
+      name: 'strip-dark-css-raw',
+      enforce: 'pre',
+      transform(code, id) {
+        if (!id.includes('/src/dark.user.css?raw')) return null;
+        return { code: `export default ${JSON.stringify(stripDarkCss(code))};`, map: null };
+      },
+    },
     monkey({
       entry: 'src/main.js',
       userscript: {
@@ -33,6 +50,6 @@ export default defineConfig({
     }),
   ],
   build: {
-    minify: false,
+    minify: true,
   },
 });
