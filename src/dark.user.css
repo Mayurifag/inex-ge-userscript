@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           inex.ge dark
 @namespace      github.com/Mayurifag/inex-ge-userscript
-@version        1.0.8
+@version        1.0.9
 @description    Dark theme for inex.ge — readable surfaces, recolored icons, no white panels.
 @author         Mayurifag
 @homepageURL    https://github.com/Mayurifag/inex-ge-userscript
@@ -50,6 +50,7 @@
   html:root .calculator,
   html:root .itemInput,
   html:root .feedback,
+  html:root #pre-declaration-success,
   html:root .modal-content,
   html:root .card,
   html:root .resultsWrapper,
@@ -324,6 +325,17 @@
     border: 1px solid var(--inex-border) !important;
     border-radius: 8px !important;
     box-shadow: 0 8px 32px rgb(0 0 0 / 50%) !important;
+  }
+
+  html:root #pre-declaration-success h3,
+  html:root #pre-declaration-success p {
+    color: var(--inex-text) !important;
+  }
+
+  html:root .ui-dialog,
+  html:root .ui-widget-content {
+    background: var(--inex-surface) !important;
+    color: var(--inex-text) !important;
   }
 
   html:root .modal-backdrop.show {
