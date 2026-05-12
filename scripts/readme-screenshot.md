@@ -2,9 +2,10 @@ Generate `docs/before-after.webp` for the README. Two screenshots stacked vertic
 
 # Prerequisites (verify before doing anything)
 
-1. Dev server up: `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5173/__vite-plugin-monkey.install.user.js` returns `200`. If not, abort with a clear message telling me to run `npm run dev` and re-install the userscript at `http://127.0.0.1:5173/__vite-plugin-monkey.install.user.js` (vite-plugin-monkey caches a stale `monkeyWindow` key on each restart).
-2. The user is already logged into inex.ge in the Chrome profile that `mcp__playwright-chrome` uses.
-3. `ffmpeg` is on PATH.
+1. Dev server up: `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:5173/__vite-plugin-monkey.install.user.js` returns `200`. If not, launch `npm run dev` yourself, wait for the install endpoint on the actual Vite port to return `200`, and use that server for the screenshot run. Stop the dev server before ending the task. Only abort if the endpoint still cannot be made available after launching it.
+2. Tampermonkey is enabled and Chrome's Tampermonkey extension details page has **Allow User Scripts** enabled. If Tampermonkey shows `Please enable the Allow User Scripts extension setting`, explicitly tell me to open `chrome://extensions/?id=dhdgffkkebhmkfjojejmpbldmpobfkfo` and enable **Allow User Scripts** before continuing.
+3. The user is already logged into inex.ge in the Chrome profile that `mcp__playwright-chrome` uses.
+4. ImageMagick `magick` is on PATH.
 
 # Selectors with PII (must be blurred)
 
@@ -28,7 +29,7 @@ table.table tbody td.description {
 }
 ```
 
-# Label badge (DOM, not ffmpeg — must be portable, no system fonts)
+# Label badge (DOM, not image post-processing — must be portable, no system fonts)
 
 Before each screenshot, inject a small fixed-position label in the top-left corner so it bakes into the PNG. Use the page's own font stack:
 
@@ -42,11 +43,11 @@ Before each screenshot, inject a small fixed-position label in the top-left corn
     top: '8px',
     left: '8px',
     zIndex: '2147483647',
-    padding: '3px 8px',
-    borderRadius: '4px',
+    padding: '5px 10px',
+    borderRadius: '5px',
     background: 'rgba(0,0,0,0.55)',
     color: '#fff',
-    font: '600 13px/1.2 system-ui, sans-serif',
+    font: '600 16px/1.2 system-ui, sans-serif',
     pointerEvents: 'none',
   });
   document.body.appendChild(el);
@@ -81,15 +82,13 @@ Use `mcp__playwright-chrome__*` tools throughout. Do **not** open a fresh isolat
 4. **AFTER screenshot** (`docs/after.png`):
    - Set every flag back to `true` via `mk.GM_setValue(key, true)`.
    - Navigate to `https://inex.ge/en/room/parcels?perPage=40`.
-   - Verify `document.documentElement.className` contains `inex-ge-dark` and `tbody tr` count is 40.
+   - Verify the URL contains `perPage=40`, the table has visible rows, and `#inex-ge-dark-style` exists.
    - Inject the blur CSS above.
    - Inject the label badge (above) with text `"After"`.
    - `browser_take_screenshot` with `filename: "docs/after.png"`, `type: "png"`, `fullPage: false`.
-5. **Combine** with ffmpeg — plain vstack, no drawtext (labels are already baked into the PNGs):
+5. **Combine** with ImageMagick — plain vertical append, no text drawing (labels are already baked into the PNGs):
    ```sh
-   ffmpeg -y -i docs/before.png -i docs/after.png \
-     -filter_complex "[0:v][1:v]vstack=inputs=2" \
-     -c:v libwebp -quality 85 docs/before-after.webp
+   magick docs/before.png docs/after.png -append -quality 85 docs/before-after.webp
    ```
 6. **Cleanup**: delete `docs/before.png` and `docs/after.png`. Only `docs/before-after.webp` is checked in.
 7. Print the final path and file size, nothing else.
